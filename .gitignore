@@ -28,8 +28,8 @@ out/
 coverage/
 
 # Models and datasets artifacts
-models/
-artifacts/
+/models/
+/artifacts/
 *.safetensors
 *.ckpt
 *.pt
