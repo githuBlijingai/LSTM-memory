@@ -1,0 +1,17 @@
+{
+  "name": "memory-system",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev:web": "npm --prefix frontend run dev",
+    "build:web": "npm --prefix frontend run build",
+    "lint:web": "npm --prefix frontend run lint",
+    "test:web": "npm --prefix frontend run test",
+    "typecheck:web": "npm --prefix frontend run typecheck",
+    "test:backend": "python -m pytest backend -q",
+    "docker:infra": "docker compose -f infra/docker-compose.yml up -d db redis",
+    "docker:up": "docker compose -f infra/docker-compose.yml up -d --build",
+    "docker:down": "docker compose -f infra/docker-compose.yml down",
+    "docker:logs": "docker compose -f infra/docker-compose.yml logs -f"
+  }
+}

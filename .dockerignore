@@ -1,0 +1,12 @@
+.git
+.gitignore
+.venv
+.memory-system
+.env
+.env.local
+frontend
+docs
+**/__pycache__
+**/.pytest_cache
+**/*.pyc
+*.log

@@ -1,0 +1,158 @@
+name: memory-system
+
+x-backend-environment: &backend-environment
+  ENVIRONMENT: ${ENVIRONMENT:-development}
+  DATABASE_URL: postgresql+psycopg://memory:${POSTGRES_PASSWORD:-change-me}@db:5432/memory
+  REDIS_URL: redis://redis:6379/0
+  OIDC_JWKS_URL: ${OIDC_JWKS_URL:-}
+  OIDC_ISSUER: ${OIDC_ISSUER:-}
+  OIDC_AUDIENCE: ${OIDC_AUDIENCE:-}
+  DEV_AUTH_ENABLED: ${DEV_AUTH_ENABLED:-false}
+  EMBEDDING_PROVIDER: ${EMBEDDING_PROVIDER:-remote}
+  EMBEDDING_MODEL_NAME: ${EMBEDDING_MODEL_NAME:-}
+  EMBEDDING_MODEL_VERSION: ${EMBEDDING_MODEL_VERSION:-}
+  EMBEDDING_API_BASE: ${EMBEDDING_API_BASE:-}
+  EMBEDDING_API_KEY: ${EMBEDDING_API_KEY:-}
+  RERANKER_ENABLED: ${RERANKER_ENABLED:-true}
+  RERANKER_PROVIDER: ${RERANKER_PROVIDER:-remote}
+  RERANKER_MODEL_NAME: ${RERANKER_MODEL_NAME:-}
+  RERANKER_MODEL_VERSION: ${RERANKER_MODEL_VERSION:-}
+  RERANKER_API_BASE: ${RERANKER_API_BASE:-}
+  RERANKER_API_KEY: ${RERANKER_API_KEY:-}
+  EVENT_MODEL_URI: ${EVENT_MODEL_URI:-}
+  EVENT_MODEL_VERSION: ${EVENT_MODEL_VERSION:-}
+  MODEL_DEVICE: ${MODEL_DEVICE:-cpu}
+  LOCAL_MODEL_MIN_VRAM_GB: ${LOCAL_MODEL_MIN_VRAM_GB:-8}
+  ALLOW_CPU_MODELS: ${ALLOW_CPU_MODELS:-false}
+  MODEL_HTTP_TIMEOUT_SECONDS: ${MODEL_HTTP_TIMEOUT_SECONDS:-30}
+  BOOTSTRAP_NON_INTERACTIVE: "true"
+
+x-backend-build: &backend-build
+  context: ..
+  dockerfile: backend/Dockerfile
+  args:
+    # 设计意图：事件写入必须能被编码处理，Compose 默认使用 ml 档；
+    # 只跑 API/迁移等基础能力时设置 INSTALL_ML=false 使用精简基础档。
+    INSTALL_ML: "${INSTALL_ML:-true}"
+    TORCH_CPU_INDEX_URL: "${TORCH_CPU_INDEX_URL:-https://mirror.sjtu.edu.cn/pytorch-wheels/cpu}"
+
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: memory
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-me}
+      POSTGRES_DB: memory
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U memory -d memory"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  bootstrap:
+    build: *backend-build
+    environment: *backend-environment
+    command: ["python", "-m", "app.bootstrap"]
+    volumes:
+      - bootstrap-data:/app/.memory-system
+      - "${MODEL_DIR:-../models}:/models:ro"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  api:
+    build: *backend-build
+    environment: *backend-environment
+    command: ["sh", "-c", "alembic upgrade head && python -m uvicorn app.main:app --host 0.0.0.0 --port 8000"]
+    ports:
+      - "8000:8000"
+    volumes:
+      - "${MODEL_DIR:-../models}:/models:ro"
+    depends_on:
+      bootstrap:
+        condition: service_completed_successfully
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/v1/health/live')"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  worker:
+    build: *backend-build
+    environment: *backend-environment
+    command: ["python", "-m", "celery", "-A", "app.worker.celery_app", "worker", "--loglevel=INFO"]
+    volumes:
+      - "${MODEL_DIR:-../models}:/models:ro"
+    depends_on:
+      bootstrap:
+        condition: service_completed_successfully
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  beat:
+    build: *backend-build
+    environment: *backend-environment
+    command: ["python", "-m", "celery", "-A", "app.worker.celery_app", "beat", "--loglevel=INFO", "--schedule=/app/state/celerybeat-schedule"]
+    volumes:
+      - beat-state:/app/state
+    depends_on:
+      bootstrap:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
+
+  web:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    environment:
+      BACKEND_URL: http://api:8000
+      NEXT_PUBLIC_APP_ENV: ${NEXT_PUBLIC_APP_ENV:-development}
+      DEV_AUTH_ENABLED: ${DEV_AUTH_ENABLED:-false}
+      DEV_AUTH_TOKEN: ${DEV_AUTH_TOKEN:-}
+    ports:
+      - "3000:3000"
+    depends_on:
+      api:
+        condition: service_healthy
+
+  nginx:
+    image: nginx:1.27-alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      web:
+        condition: service_started
+
+volumes:
+  postgres-data:
+  redis-data:
+  bootstrap-data:
+  beat-state:

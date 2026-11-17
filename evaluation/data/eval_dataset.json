@@ -1,0 +1,2634 @@
+{
+  "version": "eval-v1",
+  "generated_at": "2026-04-02T00:00:00Z",
+  "eval_clock": "2026-04-15T00:00:00Z",
+  "provenance": {
+    "source": "本评估手写；题材取自设计文档 3.3 / 4.4 / 12.5 与既有实现配置",
+    "contains_real_user_data": false,
+    "construction": "确定性 Python 构造器 + UUIDv5 稳定 ID，重复生成逐字节一致",
+    "generator": "evaluation/dataset.py"
+  },
+  "entities": [
+    {
+      "key": "alpha",
+      "entity_id": "911b519e-5a19-5be7-9477-580d82dc65f5",
+      "entity_name": "项目 Alpha",
+      "entity_type": "project",
+      "owner_id": "eval-analyst",
+      "visibility": "shared"
+    },
+    {
+      "key": "beta",
+      "entity_id": "c73c5611-e22e-5358-a6ca-a2868548705e",
+      "entity_name": "项目 Beta",
+      "entity_type": "project",
+      "owner_id": "eval-analyst",
+      "visibility": "shared"
+    },
+    {
+      "key": "zhangwei",
+      "entity_id": "66eb0f2c-27fb-52f8-a10f-b3a58de25812",
+      "entity_name": "张伟",
+      "entity_type": "person",
+      "owner_id": "eval-analyst",
+      "visibility": "shared"
+    },
+    {
+      "key": "lina",
+      "entity_id": "91b52962-625f-5e2f-962b-0dd4180a41b5",
+      "entity_name": "李娜",
+      "entity_type": "person",
+      "owner_id": "eval-analyst",
+      "visibility": "shared"
+    },
+    {
+      "key": "retrieval_team",
+      "entity_id": "e60ad5b1-fb6b-5f6f-a46c-3432509c34b8",
+      "entity_name": "检索组",
+      "entity_type": "team",
+      "owner_id": "eval-analyst",
+      "visibility": "shared"
+    },
+    {
+      "key": "ops",
+      "entity_id": "eb1f0af3-5c07-517c-ac24-6165473d44b2",
+      "entity_name": "模型服务运维",
+      "entity_type": "team",
+      "owner_id": "eval-analyst",
+      "visibility": "shared"
+    },
+    {
+      "key": "xinghe",
+      "entity_id": "59c3182e-aff6-5a10-a3d1-b42ae898acf8",
+      "entity_name": "客户星河科技",
+      "entity_type": "organization",
+      "owner_id": "eval-analyst",
+      "visibility": "shared"
+    },
+    {
+      "key": "yunhai",
+      "entity_id": "764f309e-5a0c-54b8-9573-58f241434cda",
+      "entity_name": "客户云海制造",
+      "entity_type": "organization",
+      "owner_id": "eval-analyst",
+      "visibility": "shared"
+    },
+    {
+      "key": "pipeline",
+      "entity_id": "466947df-bc3b-5cf6-9ca2-6e6a937759b5",
+      "entity_name": "发布流水线",
+      "entity_type": "system",
+      "owner_id": "eval-analyst",
+      "visibility": "shared"
+    },
+    {
+      "key": "coffee",
+      "entity_id": "84fc4d38-f993-57d8-98e3-56c0730131a3",
+      "entity_name": "用户-咖啡",
+      "entity_type": "person",
+      "owner_id": "eval-analyst",
+      "visibility": "shared"
+    },
+    {
+      "key": "timezone",
+      "entity_id": "e2385b7a-698d-5249-8e18-7356fc6c02f1",
+      "entity_name": "用户-时区",
+      "entity_type": "person",
+      "owner_id": "eval-analyst",
+      "visibility": "shared"
+    },
+    {
+      "key": "frontend",
+      "entity_id": "30de5fde-ffe1-5edd-bb72-0a40132b032a",
+      "entity_name": "前端控制台",
+      "entity_type": "project",
+      "owner_id": "eval-analyst",
+      "visibility": "shared"
+    }
+  ],
+  "events": [
+    {
+      "key": "a1",
+      "event_id": "3674f144-3d14-5cbb-9654-fae109017259",
+      "entity_id": "911b519e-5a19-5be7-9477-580d82dc65f5",
+      "entity_key": "alpha",
+      "canonical_subject": "项目 Alpha",
+      "subject": "项目 Alpha",
+      "event_type": "decision",
+      "title": "确定检索候选阈值",
+      "content": "项目 Alpha 决定将首版向量候选最低余弦相似度设为 0.15，每路候选数 100。",
+      "event_time": "2026-03-02T10:07:00Z",
+      "sequence_no": 1,
+      "importance": 0.9,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.16,
+      "familiarity_updated_at": "2026-04-01T00:00:00Z",
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    },
+    {
+      "key": "a2",
+      "event_id": "88cb8ce7-c79d-542d-966e-6bf221e46076",
+      "entity_id": "911b519e-5a19-5be7-9477-580d82dc65f5",
+      "entity_key": "alpha",
+      "canonical_subject": "项目 Alpha",
+      "subject": "项目 Alpha",
+      "event_type": "status",
+      "title": "完成双路召回联调",
+      "content": "项目 Alpha 完成事件与 Wiki 双路召回联调，候选数与去重逻辑符合预期。",
+      "event_time": "2026-03-05T11:14:00Z",
+      "sequence_no": 2,
+      "importance": 0.7,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.0,
+      "familiarity_updated_at": null,
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    },
+    {
+      "key": "a3",
+      "event_id": "12e1b8ea-c952-5e0d-99d4-7ceebaa91c2a",
+      "entity_id": "911b519e-5a19-5be7-9477-580d82dc65f5",
+      "entity_key": "alpha",
+      "canonical_subject": "项目 Alpha",
+      "subject": "项目 Alpha",
+      "event_type": "risk",
+      "title": "精排延迟超过目标",
+      "content": "项目 Alpha 开启精排后搜索 P95 达到 1.2 秒，超过 800 毫秒目标。",
+      "event_time": "2026-03-09T12:21:00Z",
+      "sequence_no": 3,
+      "importance": 0.85,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.08,
+      "familiarity_updated_at": "2026-04-02T00:00:00Z",
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    },
+    {
+      "key": "a4",
+      "event_id": "7350fbee-3efb-5c38-94a8-630c97979b00",
+      "entity_id": "911b519e-5a19-5be7-9477-580d82dc65f5",
+      "entity_key": "alpha",
+      "canonical_subject": "项目 Alpha",
+      "subject": "项目 Alpha",
+      "event_type": "decision",
+      "title": "每个词条最多保留两个分块",
+      "content": "项目 Alpha 决定同一 Wiki 词条在搜索结果中最多保留 2 个知识块。",
+      "event_time": "2026-03-12T13:28:00Z",
+      "sequence_no": 4,
+      "importance": 0.8,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.0,
+      "familiarity_updated_at": null,
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    },
+    {
+      "key": "a5",
+      "event_id": "480ecb63-3bcd-5484-824f-0d8c9ebb6527",
+      "entity_id": "911b519e-5a19-5be7-9477-580d82dc65f5",
+      "entity_key": "alpha",
+      "canonical_subject": "项目 Alpha",
+      "subject": "项目 Alpha",
+      "event_type": "task",
+      "title": "增加时间敏感切片评估",
+      "content": "项目 Alpha 的离线评估增加时间敏感查询切片，单独报告排序指标。",
+      "event_time": "2026-03-18T14:35:00Z",
+      "sequence_no": 5,
+      "importance": 0.7,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.0,
+      "familiarity_updated_at": null,
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    },
+    {
+      "key": "a6",
+      "event_id": "d4a3ee81-05e5-53c5-baf8-f852291dce33",
+      "entity_id": "911b519e-5a19-5be7-9477-580d82dc65f5",
+      "entity_key": "alpha",
+      "canonical_subject": "项目 Alpha",
+      "subject": "项目 Alpha",
+      "event_type": "fact",
+      "title": "镜像改用 CPU-only torch",
+      "content": "项目 Alpha 的镜像使用 CPU-only torch，移除 CUDA 运行时以缩小体积。",
+      "event_time": "2026-03-22T15:42:00Z",
+      "sequence_no": 6,
+      "importance": 0.5,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.0,
+      "familiarity_updated_at": null,
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    },
+    {
+      "key": "a7",
+      "event_id": "9890bf3e-3472-5b05-920c-dbd96ffc719e",
+      "entity_id": "911b519e-5a19-5be7-9477-580d82dc65f5",
+      "entity_key": "alpha",
+      "canonical_subject": "项目 Alpha",
+      "subject": "Alpha 项目",
+      "event_type": "status",
+      "title": "Alpha 项目完成灰度",
+      "content": "Alpha 项目完成 10% 灰度，搜索结果分数解释与反馈入口均已验证。",
+      "event_time": "2026-03-25T16:49:00Z",
+      "sequence_no": 7,
+      "importance": 0.7,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.0,
+      "familiarity_updated_at": null,
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    },
+    {
+      "key": "b1",
+      "event_id": "046f6a4d-afa4-532f-b82a-7c99cadd4db0",
+      "entity_id": "c73c5611-e22e-5358-a6ca-a2868548705e",
+      "entity_key": "beta",
+      "canonical_subject": "项目 Beta",
+      "subject": "项目 Beta",
+      "event_type": "decision",
+      "title": "Beta 采用更宽松的候选阈值",
+      "content": "项目 Beta 将向量候选最低余弦相似度设为 0.25，每路候选数 200。",
+      "event_time": "2026-03-03T10:07:00Z",
+      "sequence_no": 1,
+      "importance": 0.8,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.0,
+      "familiarity_updated_at": null,
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    },
+    {
+      "key": "b2",
+      "event_id": "d5a7bcb6-8edf-5044-8e9e-51428871cb88",
+      "entity_id": "c73c5611-e22e-5358-a6ca-a2868548705e",
+      "entity_key": "beta",
+      "canonical_subject": "项目 Beta",
+      "subject": "项目 Beta",
+      "event_type": "status",
+      "title": "Beta 精排延迟达标",
+      "content": "项目 Beta 精排后搜索 P95 为 0.6 秒，低于 800 毫秒目标。",
+      "event_time": "2026-03-07T11:14:00Z",
+      "sequence_no": 2,
+      "importance": 0.7,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.0,
+      "familiarity_updated_at": null,
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    },
+    {
+      "key": "b3",
+      "event_id": "c1f7df73-c7c6-55d9-8f4b-5891290b8a0d",
+      "entity_id": "c73c5611-e22e-5358-a6ca-a2868548705e",
+      "entity_key": "beta",
+      "canonical_subject": "项目 Beta",
+      "subject": "项目 Beta",
+      "event_type": "decision",
+      "title": "Beta 选用 BGE-large 向量",
+      "content": "项目 Beta 决定使用 BGE-large-zh-v1.5 作为基础向量模型。",
+      "event_time": "2026-03-11T12:21:00Z",
+      "sequence_no": 3,
+      "importance": 0.75,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.0,
+      "familiarity_updated_at": null,
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    },
+    {
+      "key": "b4",
+      "event_id": "d207b457-5a10-5332-89bb-27b398c22a37",
+      "entity_id": "c73c5611-e22e-5358-a6ca-a2868548705e",
+      "entity_key": "beta",
+      "canonical_subject": "项目 Beta",
+      "subject": "项目 Beta",
+      "event_type": "fact",
+      "title": "Beta 回归集规模",
+      "content": "项目 Beta 维护 120 条查询回归集，覆盖事件与 Wiki 两路。",
+      "event_time": "2026-03-15T13:28:00Z",
+      "sequence_no": 4,
+      "importance": 0.6,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.0,
+      "familiarity_updated_at": null,
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    },
+    {
+      "key": "b5",
+      "event_id": "2a8f4d6b-2f24-5279-9e96-3b8595fc2333",
+      "entity_id": "c73c5611-e22e-5358-a6ca-a2868548705e",
+      "entity_key": "beta",
+      "canonical_subject": "项目 Beta",
+      "subject": "项目 Beta",
+      "event_type": "risk",
+      "title": "Beta 冷启动失败率偏高",
+      "content": "项目 Beta 新实体冷启动查询的无结果率达到 18%。",
+      "event_time": "2026-03-20T14:35:00Z",
+      "sequence_no": 5,
+      "importance": 0.8,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.0,
+      "familiarity_updated_at": null,
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    },
+    {
+      "key": "b6",
+      "event_id": "900410a5-6f8d-55f1-b598-4f3dd576cf8f",
+      "entity_id": "c73c5611-e22e-5358-a6ca-a2868548705e",
+      "entity_key": "beta",
+      "canonical_subject": "项目 Beta",
+      "subject": "项目 Beta",
+      "event_type": "status",
+      "title": "Beta 灰度扩大到一半",
+      "content": "项目 Beta 灰度扩大到 50%，暂未观察到排序回退。",
+      "event_time": "2026-03-26T15:42:00Z",
+      "sequence_no": 6,
+      "importance": 0.7,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.0,
+      "familiarity_updated_at": null,
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    },
+    {
+      "key": "z1",
+      "event_id": "897beee3-1ec9-5847-afc8-bc0ad35dedf1",
+      "entity_id": "66eb0f2c-27fb-52f8-a10f-b3a58de25812",
+      "entity_key": "zhangwei",
+      "canonical_subject": "张伟",
+      "subject": "张伟",
+      "event_type": "preference",
+      "title": "偏好深色主题",
+      "content": "张伟偏好深色主题，控制台默认跟随系统外观。",
+      "event_time": "2026-02-10T10:07:00Z",
+      "sequence_no": 1,
+      "importance": 0.6,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.16,
+      "familiarity_updated_at": "2026-04-06T00:00:00Z",
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    },
+    {
+      "key": "z2",
+      "event_id": "01cfd0ea-f9c4-5d05-bcab-d5c55ffa5f80",
+      "entity_id": "66eb0f2c-27fb-52f8-a10f-b3a58de25812",
+      "entity_key": "zhangwei",
+      "canonical_subject": "张伟",
+      "subject": "张伟",
+      "event_type": "decision",
+      "title": "每周三做需求评审",
+      "content": "张伟安排在每周三下午做需求评审，不接受临时插会。",
+      "event_time": "2026-02-14T11:14:00Z",
+      "sequence_no": 2,
+      "importance": 0.7,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.0,
+      "familiarity_updated_at": null,
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    },
+    {
+      "key": "z3",
+      "event_id": "d8a48816-3066-5ee3-99b7-47bc72094677",
+      "entity_id": "66eb0f2c-27fb-52f8-a10f-b3a58de25812",
+      "entity_key": "zhangwei",
+      "canonical_subject": "张伟",
+      "subject": "张伟",
+      "event_type": "task",
+      "title": "负责反馈信号",
+      "content": "张伟负责反馈信号与熟悉度更新，关注十分钟去重规则。",
+      "event_time": "2026-02-20T12:21:00Z",
+      "sequence_no": 3,
+      "importance": 0.75,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.0,
+      "familiarity_updated_at": null,
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    },
+    {
+      "key": "z4",
+      "event_id": "4cb2a72a-3378-5db9-93eb-2a55a6c22633",
+      "entity_id": "66eb0f2c-27fb-52f8-a10f-b3a58de25812",
+      "entity_key": "zhangwei",
+      "canonical_subject": "张伟",
+      "subject": "张伟",
+      "event_type": "fact",
+      "title": "前端使用 pnpm",
+      "content": "张伟要求前端统一使用 pnpm，不使用 npm 锁文件。",
+      "event_time": "2026-02-25T13:28:00Z",
+      "sequence_no": 4,
+      "importance": 0.5,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.0,
+      "familiarity_updated_at": null,
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    },
+    {
+      "key": "l1",
+      "event_id": "6c0e0e6b-769a-5aec-b9d4-3ea554c4eb18",
+      "entity_id": "91b52962-625f-5e2f-962b-0dd4180a41b5",
+      "entity_key": "lina",
+      "canonical_subject": "李娜",
+      "subject": "李娜",
+      "event_type": "decision",
+      "title": "采用 nDCG@10 作为主指标",
+      "content": "李娜决定排序质量以 nDCG@10 为主指标，Recall@10 用于召回诊断。",
+      "event_time": "2026-02-11T10:07:00Z",
+      "sequence_no": 1,
+      "importance": 0.8,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.0,
+      "familiarity_updated_at": null,
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    },
+    {
+      "key": "l2",
+      "event_id": "61f7530d-9b2a-5937-9d66-623d769844d6",
+      "entity_id": "91b52962-625f-5e2f-962b-0dd4180a41b5",
+      "entity_key": "lina",
+      "canonical_subject": "李娜",
+      "subject": "李娜",
+      "event_type": "risk",
+      "title": "担心新实体冷启动",
+      "content": "李娜担心新实体只有一两条事件时，Query Adapter 无法提供稳定排序。",
+      "event_time": "2026-02-18T11:14:00Z",
+      "sequence_no": 2,
+      "importance": 0.75,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.0,
+      "familiarity_updated_at": null,
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    },
+    {
+      "key": "l3",
+      "event_id": "ba174020-f77f-59d5-92ce-c3924aa38b97",
+      "entity_id": "91b52962-625f-5e2f-962b-0dd4180a41b5",
+      "entity_key": "lina",
+      "canonical_subject": "李娜",
+      "subject": "李娜",
+      "event_type": "preference",
+      "title": "报告要简洁",
+      "content": "李娜偏好单页结论先行的报告，细节放在附录。",
+      "event_time": "2026-02-24T12:21:00Z",
+      "sequence_no": 3,
+      "importance": 0.6,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.0,
+      "familiarity_updated_at": null,
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    },
+    {
+      "key": "t1",
+      "event_id": "8b8e4e18-82f8-50f7-b500-0b2cde736a82",
+      "entity_id": "e60ad5b1-fb6b-5f6f-a46c-3432509c34b8",
+      "entity_key": "retrieval_team",
+      "canonical_subject": "检索组",
+      "subject": "检索组",
+      "event_type": "decision",
+      "title": "每周五跑基线评估",
+      "content": "检索组决定每周五运行一次离线基线评估，记录 Recall@10、MRR@10 与 nDCG@10。",
+      "event_time": "2026-02-06T10:07:00Z",
+      "sequence_no": 1,
+      "importance": 0.8,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.24,
+      "familiarity_updated_at": "2026-04-03T00:00:00Z",
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    },
+    {
+      "key": "t2",
+      "event_id": "46ed847d-1499-5b16-b25a-30a50cea84ba",
+      "entity_id": "e60ad5b1-fb6b-5f6f-a46c-3432509c34b8",
+      "entity_key": "retrieval_team",
+      "canonical_subject": "检索组",
+      "subject": "检索组",
+      "event_type": "status",
+      "title": "基线评估脚本就绪",
+      "content": "检索组完成基线评估脚本，可在无 GPU 环境复现纯 BGE 对比。",
+      "event_time": "2026-02-27T11:14:00Z",
+      "sequence_no": 2,
+      "importance": 0.7,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.0,
+      "familiarity_updated_at": null,
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    },
+    {
+      "key": "t3",
+      "event_id": "262e6f16-2448-59e7-8631-d0fff1238242",
+      "entity_id": "e60ad5b1-fb6b-5f6f-a46c-3432509c34b8",
+      "entity_key": "retrieval_team",
+      "canonical_subject": "检索组",
+      "subject": "检索组",
+      "event_type": "task",
+      "title": "补充长序列切片",
+      "content": "检索组计划补充长序列查询切片，单独观察窗口截断的影响。",
+      "event_time": "2026-03-13T12:21:00Z",
+      "sequence_no": 3,
+      "importance": 0.7,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.0,
+      "familiarity_updated_at": null,
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    },
+    {
+      "key": "o1",
+      "event_id": "d56ab0e2-3f5a-5480-a474-3cbaf47a8f90",
+      "entity_id": "eb1f0af3-5c07-517c-ac24-6165473d44b2",
+      "entity_key": "ops",
+      "canonical_subject": "模型服务运维",
+      "subject": "模型服务运维",
+      "event_type": "decision",
+      "title": "模型包只读挂载",
+      "content": "模型服务运维决定把模型包以只读方式挂载到容器 /models 目录。",
+      "event_time": "2026-02-05T10:07:00Z",
+      "sequence_no": 1,
+      "importance": 0.8,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.0,
+      "familiarity_updated_at": null,
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    },
+    {
+      "key": "o2",
+      "event_id": "d7a89272-025c-5672-a52c-73dcdba05f96",
+      "entity_id": "eb1f0af3-5c07-517c-ac24-6165473d44b2",
+      "entity_key": "ops",
+      "canonical_subject": "模型服务运维",
+      "subject": "模型服务运维",
+      "event_type": "risk",
+      "title": "CUDA 镜像体积过大",
+      "content": "模型服务运维发现带 CUDA 的镜像达到 6.8GB，构建经常超时中断。",
+      "event_time": "2026-02-12T11:14:00Z",
+      "sequence_no": 2,
+      "importance": 0.8,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.0,
+      "familiarity_updated_at": null,
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    },
+    {
+      "key": "o3",
+      "event_id": "0d85b41c-62b8-5ec6-a27b-66b71f5e0ed7",
+      "entity_id": "eb1f0af3-5c07-517c-ac24-6165473d44b2",
+      "entity_key": "ops",
+      "canonical_subject": "模型服务运维",
+      "subject": "模型服务运维",
+      "event_type": "task",
+      "title": "改用 CPU-only torch",
+      "content": "模型服务运维改用 CPU-only torch wheel，并在构建期落盘依赖。",
+      "event_time": "2026-02-19T12:21:00Z",
+      "sequence_no": 3,
+      "importance": 0.7,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.0,
+      "familiarity_updated_at": null,
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    },
+    {
+      "key": "o4",
+      "event_id": "b336a35d-366c-5a9c-af0e-1eb5f5a06299",
+      "entity_id": "eb1f0af3-5c07-517c-ac24-6165473d44b2",
+      "entity_key": "ops",
+      "canonical_subject": "模型服务运维",
+      "subject": "模型服务运维",
+      "event_type": "status",
+      "title": "镜像构建通过",
+      "content": "模型服务运维完成干净镜像构建，事件编码在容器内可正常运行。",
+      "event_time": "2026-02-28T13:28:00Z",
+      "sequence_no": 4,
+      "importance": 0.7,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.0,
+      "familiarity_updated_at": null,
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    },
+    {
+      "key": "o5",
+      "event_id": "cecced9e-adcf-52b7-9a6d-23bcd490bd30",
+      "entity_id": "eb1f0af3-5c07-517c-ac24-6165473d44b2",
+      "entity_key": "ops",
+      "canonical_subject": "模型服务运维",
+      "subject": "模型服务运维",
+      "event_type": "decision",
+      "title": "工作记忆过期清理口径",
+      "content": "工作记忆清理只删除已关闭且已过期的会话条目，保留会话元数据。",
+      "event_time": "2026-03-16T14:35:00Z",
+      "sequence_no": 5,
+      "importance": 0.7,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.0,
+      "familiarity_updated_at": null,
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    },
+    {
+      "key": "x1",
+      "event_id": "8c16948d-6197-5006-917a-0162b66f6bca",
+      "entity_id": "59c3182e-aff6-5a10-a3d1-b42ae898acf8",
+      "entity_key": "xinghe",
+      "canonical_subject": "客户星河科技",
+      "subject": "客户星河科技",
+      "event_type": "decision",
+      "title": "星河科技选择私有部署",
+      "content": "客户星河科技决定采用私有化部署，不接受跨租户共享 Wiki。",
+      "event_time": "2026-02-08T10:07:00Z",
+      "sequence_no": 1,
+      "importance": 0.8,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.0,
+      "familiarity_updated_at": null,
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    },
+    {
+      "key": "x2",
+      "event_id": "1257fb1d-3119-5d92-aa6f-78e09ebe6fbe",
+      "entity_id": "59c3182e-aff6-5a10-a3d1-b42ae898acf8",
+      "entity_key": "xinghe",
+      "canonical_subject": "客户星河科技",
+      "subject": "客户星河科技",
+      "event_type": "risk",
+      "title": "星河科技要求合规删除",
+      "content": "客户星河科技要求隐私删除优先于记忆保护，删除后正文与向量不可检索。",
+      "event_time": "2026-02-16T11:14:00Z",
+      "sequence_no": 2,
+      "importance": 0.85,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.0,
+      "familiarity_updated_at": null,
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    },
+    {
+      "key": "x3",
+      "event_id": "79c4b731-5488-5cfd-911e-30c37f872319",
+      "entity_id": "59c3182e-aff6-5a10-a3d1-b42ae898acf8",
+      "entity_key": "xinghe",
+      "canonical_subject": "客户星河科技",
+      "subject": "客户星河科技",
+      "event_type": "fact",
+      "title": "星河科技数据规模",
+      "content": "客户星河科技预计有 10 万条活跃事件。",
+      "event_time": "2026-02-22T12:21:00Z",
+      "sequence_no": 3,
+      "importance": 0.6,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.0,
+      "familiarity_updated_at": null,
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    },
+    {
+      "key": "y1",
+      "event_id": "18970b21-db93-5759-b53d-da29f98069dc",
+      "entity_id": "764f309e-5a0c-54b8-9573-58f241434cda",
+      "entity_key": "yunhai",
+      "canonical_subject": "客户云海制造",
+      "subject": "客户云海制造",
+      "event_type": "decision",
+      "title": "云海制造先做 Wiki 同步",
+      "content": "客户云海制造决定首期只做 Wiki 同步与只读检索。",
+      "event_time": "2026-02-09T10:07:00Z",
+      "sequence_no": 1,
+      "importance": 0.75,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.0,
+      "familiarity_updated_at": null,
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    },
+    {
+      "key": "y2",
+      "event_id": "1661044a-dbb2-57ab-90a6-847b8ce2bb81",
+      "entity_id": "764f309e-5a0c-54b8-9573-58f241434cda",
+      "entity_key": "yunhai",
+      "canonical_subject": "客户云海制造",
+      "subject": "客户云海制造",
+      "event_type": "task",
+      "title": "云海制造提供词条",
+      "content": "客户云海制造将提供约 3000 条内部词条用于同步测试。",
+      "event_time": "2026-02-17T11:14:00Z",
+      "sequence_no": 2,
+      "importance": 0.7,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.0,
+      "familiarity_updated_at": null,
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    },
+    {
+      "key": "y3",
+      "event_id": "5d62b599-2626-5a30-817d-fd4b02ba11a5",
+      "entity_id": "764f309e-5a0c-54b8-9573-58f241434cda",
+      "entity_key": "yunhai",
+      "canonical_subject": "客户云海制造",
+      "subject": "客户云海制造",
+      "event_type": "risk",
+      "title": "云海制造内网无外网",
+      "content": "客户云海制造的内网无法访问外网，远程 Embedding 服务不可用。",
+      "event_time": "2026-02-23T12:21:00Z",
+      "sequence_no": 3,
+      "importance": 0.8,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.0,
+      "familiarity_updated_at": null,
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    },
+    {
+      "key": "p1",
+      "event_id": "8ba34c4a-4794-5d83-bda7-117adb45c9ec",
+      "entity_id": "466947df-bc3b-5cf6-9ca2-6e6a937759b5",
+      "entity_key": "pipeline",
+      "canonical_subject": "发布流水线",
+      "subject": "发布流水线",
+      "event_type": "status",
+      "title": "v1 上线",
+      "content": "发布流水线 v1 上线。",
+      "event_time": "2026-01-05T10:07:00Z",
+      "sequence_no": 1,
+      "importance": 0.6,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.0,
+      "familiarity_updated_at": null,
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    },
+    {
+      "key": "p2",
+      "event_id": "f7e1d63d-84e6-5447-b8ce-bcfffccd723d",
+      "entity_id": "466947df-bc3b-5cf6-9ca2-6e6a937759b5",
+      "entity_key": "pipeline",
+      "canonical_subject": "发布流水线",
+      "subject": "发布流水线",
+      "event_type": "task",
+      "title": "v2 增加回滚",
+      "content": "发布流水线 v2 增加一键回滚。",
+      "event_time": "2026-01-12T11:14:00Z",
+      "sequence_no": 2,
+      "importance": 0.6,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.0,
+      "familiarity_updated_at": null,
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    },
+    {
+      "key": "p3",
+      "event_id": "ad9da3b8-e33a-5da9-86bc-680626149cdd",
+      "entity_id": "466947df-bc3b-5cf6-9ca2-6e6a937759b5",
+      "entity_key": "pipeline",
+      "canonical_subject": "发布流水线",
+      "subject": "发布流水线",
+      "event_type": "decision",
+      "title": "v3 调整候选阈值",
+      "content": "发布流水线 v3 将候选最低余弦相似度从 0.20 调整为 0.15。",
+      "event_time": "2026-01-19T12:21:00Z",
+      "sequence_no": 3,
+      "importance": 0.9,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.24,
+      "familiarity_updated_at": "2026-04-04T00:00:00Z",
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    },
+    {
+      "key": "p4",
+      "event_id": "683c649c-2b3b-52f0-8013-e62b1f3a0bb2",
+      "entity_id": "466947df-bc3b-5cf6-9ca2-6e6a937759b5",
+      "entity_key": "pipeline",
+      "canonical_subject": "发布流水线",
+      "subject": "发布流水线",
+      "event_type": "task",
+      "title": "v4 增加灰度",
+      "content": "发布流水线 v4 增加 10% 灰度能力。",
+      "event_time": "2026-01-26T13:28:00Z",
+      "sequence_no": 4,
+      "importance": 0.6,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.0,
+      "familiarity_updated_at": null,
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    },
+    {
+      "key": "p5",
+      "event_id": "d9650da1-eaf0-5570-9a47-d2217eb44ca4",
+      "entity_id": "466947df-bc3b-5cf6-9ca2-6e6a937759b5",
+      "entity_key": "pipeline",
+      "canonical_subject": "发布流水线",
+      "subject": "发布流水线",
+      "event_type": "task",
+      "title": "v5 调整精排批大小",
+      "content": "发布流水线 v5 将精排批大小调整为 32。",
+      "event_time": "2026-02-02T14:35:00Z",
+      "sequence_no": 5,
+      "importance": 0.6,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.0,
+      "familiarity_updated_at": null,
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    },
+    {
+      "key": "p6",
+      "event_id": "f1209b50-25ea-5ad1-be83-ede72829e735",
+      "entity_id": "466947df-bc3b-5cf6-9ca2-6e6a937759b5",
+      "entity_key": "pipeline",
+      "canonical_subject": "发布流水线",
+      "subject": "发布流水线",
+      "event_type": "task",
+      "title": "v6 增加死信告警",
+      "content": "发布流水线 v6 增加 Outbox 死信告警。",
+      "event_time": "2026-02-09T15:42:00Z",
+      "sequence_no": 6,
+      "importance": 0.7,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.0,
+      "familiarity_updated_at": null,
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    },
+    {
+      "key": "p7",
+      "event_id": "71a107c6-410b-587b-8fe3-5df82c722ba5",
+      "entity_id": "466947df-bc3b-5cf6-9ca2-6e6a937759b5",
+      "entity_key": "pipeline",
+      "canonical_subject": "发布流水线",
+      "subject": "发布流水线",
+      "event_type": "task",
+      "title": "v7 修复备份脚本",
+      "content": "发布流水线 v7 修复数据库备份脚本的路径问题。",
+      "event_time": "2026-02-16T16:49:00Z",
+      "sequence_no": 7,
+      "importance": 0.7,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.0,
+      "familiarity_updated_at": null,
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    },
+    {
+      "key": "p8",
+      "event_id": "2a60e39a-6722-5097-8da2-43c73c053fa9",
+      "entity_id": "466947df-bc3b-5cf6-9ca2-6e6a937759b5",
+      "entity_key": "pipeline",
+      "canonical_subject": "发布流水线",
+      "subject": "发布流水线",
+      "event_type": "task",
+      "title": "v8 增加限流",
+      "content": "发布流水线 v8 增加按用户限流。",
+      "event_time": "2026-02-23T09:56:00Z",
+      "sequence_no": 8,
+      "importance": 0.6,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.0,
+      "familiarity_updated_at": null,
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    },
+    {
+      "key": "p9",
+      "event_id": "7b255e9d-08e2-572d-b6e0-786fc9a20429",
+      "entity_id": "466947df-bc3b-5cf6-9ca2-6e6a937759b5",
+      "entity_key": "pipeline",
+      "canonical_subject": "发布流水线",
+      "subject": "发布流水线",
+      "event_type": "task",
+      "title": "v9 移除 CUDA",
+      "content": "发布流水线 v9 从运行镜像移除 CUDA 运行时。",
+      "event_time": "2026-03-02T10:03:00Z",
+      "sequence_no": 9,
+      "importance": 0.7,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.0,
+      "familiarity_updated_at": null,
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    },
+    {
+      "key": "p10",
+      "event_id": "d00c1917-0df6-505a-b590-993d59891c96",
+      "entity_id": "466947df-bc3b-5cf6-9ca2-6e6a937759b5",
+      "entity_key": "pipeline",
+      "canonical_subject": "发布流水线",
+      "subject": "发布流水线",
+      "event_type": "status",
+      "title": "v10 阈值维持不变",
+      "content": "发布流水线 v10 候选阈值维持 0.15 不变。",
+      "event_time": "2026-03-09T11:10:00Z",
+      "sequence_no": 10,
+      "importance": 0.6,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.0,
+      "familiarity_updated_at": null,
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    },
+    {
+      "key": "p11",
+      "event_id": "3060111f-125a-5f0f-a024-78de77cc8a1e",
+      "entity_id": "466947df-bc3b-5cf6-9ca2-6e6a937759b5",
+      "entity_key": "pipeline",
+      "canonical_subject": "发布流水线",
+      "subject": "发布流水线",
+      "event_type": "decision",
+      "title": "v11 提高候选阈值",
+      "content": "发布流水线 v11 将候选阈值提高到 0.18。",
+      "event_time": "2026-03-16T12:17:00Z",
+      "sequence_no": 11,
+      "importance": 0.85,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.16,
+      "familiarity_updated_at": "2026-04-05T00:00:00Z",
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    },
+    {
+      "key": "p12",
+      "event_id": "ebe8cdc1-2218-5f8b-b3df-072c7d8d781c",
+      "entity_id": "466947df-bc3b-5cf6-9ca2-6e6a937759b5",
+      "entity_key": "pipeline",
+      "canonical_subject": "发布流水线",
+      "subject": "发布流水线",
+      "event_type": "task",
+      "title": "v12 增加评估报告",
+      "content": "发布流水线 v12 增加每次发布的评估报告。",
+      "event_time": "2026-03-23T13:24:00Z",
+      "sequence_no": 12,
+      "importance": 0.7,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.0,
+      "familiarity_updated_at": null,
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    },
+    {
+      "key": "c1",
+      "event_id": "3f367394-678e-5455-aca0-d06a9ecc8870",
+      "entity_id": "84fc4d38-f993-57d8-98e3-56c0730131a3",
+      "entity_key": "coffee",
+      "canonical_subject": "用户-咖啡",
+      "subject": "用户-咖啡",
+      "event_type": "preference",
+      "title": "早上喝美式咖啡",
+      "content": "用户偏好早上喝美式咖啡，不加糖。",
+      "event_time": "2026-03-01T10:07:00Z",
+      "sequence_no": 1,
+      "importance": 0.6,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.0,
+      "familiarity_updated_at": null,
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    },
+    {
+      "key": "u1",
+      "event_id": "de1422fb-e723-55fd-9c1a-ca6c28de9523",
+      "entity_id": "e2385b7a-698d-5249-8e18-7356fc6c02f1",
+      "entity_key": "timezone",
+      "canonical_subject": "用户-时区",
+      "subject": "用户-时区",
+      "event_type": "preference",
+      "title": "使用东八区时间",
+      "content": "用户所在时区为 Asia/Shanghai，排期按北京时间展示。",
+      "event_time": "2026-02-28T10:07:00Z",
+      "sequence_no": 1,
+      "importance": 0.6,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.0,
+      "familiarity_updated_at": null,
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    },
+    {
+      "key": "f1",
+      "event_id": "d6a926e3-5787-5cc2-a53e-69f7e00ff102",
+      "entity_id": "30de5fde-ffe1-5edd-bb72-0a40132b032a",
+      "entity_key": "frontend",
+      "canonical_subject": "前端控制台",
+      "subject": "前端控制台",
+      "event_type": "status",
+      "title": "搜索结果展示分数解释",
+      "content": "前端控制台在搜索结果中展示分数解释与模型版本。",
+      "event_time": "2026-03-04T10:07:00Z",
+      "sequence_no": 1,
+      "importance": 0.7,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.0,
+      "familiarity_updated_at": null,
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    },
+    {
+      "key": "f2",
+      "event_id": "da3db0c1-134d-5bd5-b414-9b64422c56a2",
+      "entity_id": "30de5fde-ffe1-5edd-bb72-0a40132b032a",
+      "entity_key": "frontend",
+      "canonical_subject": "前端控制台",
+      "subject": "前端控制台",
+      "event_type": "decision",
+      "title": "图表使用 ECharts",
+      "content": "前端控制台决定图表统一使用 ECharts。",
+      "event_time": "2026-03-08T11:14:00Z",
+      "sequence_no": 2,
+      "importance": 0.7,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.0,
+      "familiarity_updated_at": null,
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    },
+    {
+      "key": "f3",
+      "event_id": "820d6e27-8c58-5901-9059-f341f818c4ec",
+      "entity_id": "30de5fde-ffe1-5edd-bb72-0a40132b032a",
+      "entity_key": "frontend",
+      "canonical_subject": "前端控制台",
+      "subject": "前端控制台",
+      "event_type": "task",
+      "title": "Wiki 锚点跳转",
+      "content": "前端控制台完成 Wiki 结果到知识块的锚点跳转。",
+      "event_time": "2026-03-14T12:21:00Z",
+      "sequence_no": 3,
+      "importance": 0.7,
+      "initial_decay_score": 1.0,
+      "familiarity_score": 0.0,
+      "familiarity_updated_at": null,
+      "status": "active",
+      "visibility": "shared",
+      "owner_id": "eval-analyst"
+    }
+  ],
+  "wiki_articles": [
+    {
+      "article_id": "6ad98bf4-9939-54ad-9f5a-c5314979dc95",
+      "key": "w1",
+      "title": "余弦相似度",
+      "source": "memory-system-eval-handbook",
+      "source_url": "https://example.invalid/wiki/w1",
+      "source_page_id": "page-w1",
+      "revision_id": "rev-1",
+      "language": "zh",
+      "categories": [
+        "数学",
+        "向量"
+      ],
+      "status": "active",
+      "chunks": [
+        {
+          "key": "w1c1",
+          "chunk_id": "a69c8c64-f9d5-5bbc-a86d-76d72dc015a7",
+          "article_id": "6ad98bf4-9939-54ad-9f5a-c5314979dc95",
+          "article_key": "w1",
+          "title": "余弦相似度",
+          "chunk_index": 0,
+          "heading_path": [
+            "余弦相似度",
+            "定义"
+          ],
+          "raw_text": "余弦相似度通过测量两个向量夹角的余弦值来衡量方向相似程度，取值越接近 1 表示方向越一致。",
+          "importance": 0.7,
+          "familiarity_score": 0.24,
+          "familiarity_updated_at": "2026-04-07T00:00:00Z",
+          "status": "active",
+          "model_version": "eval-proxy-bge"
+        },
+        {
+          "key": "w1c2",
+          "chunk_id": "b6d15987-6b03-5133-b13f-807af43e4bf6",
+          "article_id": "6ad98bf4-9939-54ad-9f5a-c5314979dc95",
+          "article_key": "w1",
+          "title": "余弦相似度",
+          "chunk_index": 1,
+          "heading_path": [
+            "余弦相似度",
+            "归一化"
+          ],
+          "raw_text": "余弦相似度原始范围为 -1 到 1，检索评分中常用 (x + 1) / 2 映射到 0 到 1。",
+          "importance": 0.5,
+          "familiarity_score": 0.0,
+          "familiarity_updated_at": null,
+          "status": "active",
+          "model_version": "eval-proxy-bge"
+        },
+        {
+          "key": "w1c3",
+          "chunk_id": "eb76d82b-cf08-5921-80d7-14521efca7fb",
+          "article_id": "6ad98bf4-9939-54ad-9f5a-c5314979dc95",
+          "article_key": "w1",
+          "title": "余弦相似度",
+          "chunk_index": 2,
+          "heading_path": [
+            "余弦相似度",
+            "应用"
+          ],
+          "raw_text": "在向量检索中，余弦相似度用于候选召回；复合排序还会结合精排分数、时间衰减与熟悉度。",
+          "importance": 0.6,
+          "familiarity_score": 0.0,
+          "familiarity_updated_at": null,
+          "status": "active",
+          "model_version": "eval-proxy-bge"
+        }
+      ]
+    },
+    {
+      "article_id": "55fe9a03-7694-57b6-ac0f-25479c6c044b",
+      "key": "w2",
+      "title": "HNSW",
+      "source": "memory-system-eval-handbook",
+      "source_url": "https://example.invalid/wiki/w2",
+      "source_page_id": "page-w2",
+      "revision_id": "rev-1",
+      "language": "zh",
+      "categories": [
+        "检索",
+        "索引"
+      ],
+      "status": "active",
+      "chunks": [
+        {
+          "key": "w2c1",
+          "chunk_id": "5f462bc7-88bf-5917-9f90-796216d09679",
+          "article_id": "55fe9a03-7694-57b6-ac0f-25479c6c044b",
+          "article_key": "w2",
+          "title": "HNSW",
+          "chunk_index": 0,
+          "heading_path": [
+            "HNSW",
+            "原理"
+          ],
+          "raw_text": "HNSW 是分层可导航小世界图，通过多层图结构实现高维向量的近似最近邻搜索。",
+          "importance": 0.6,
+          "familiarity_score": 0.0,
+          "familiarity_updated_at": null,
+          "status": "active",
+          "model_version": "eval-proxy-bge"
+        },
+        {
+          "key": "w2c2",
+          "chunk_id": "c26e3649-51d8-5bb9-aa77-837311c3f284",
+          "article_id": "55fe9a03-7694-57b6-ac0f-25479c6c044b",
+          "article_key": "w2",
+          "title": "HNSW",
+          "chunk_index": 1,
+          "heading_path": [
+            "HNSW",
+            "参数"
+          ],
+          "raw_text": "常见参数包括 M、ef_construction 与 ef_search；增大参数会提高召回，同时增加内存与延迟。",
+          "importance": 0.5,
+          "familiarity_score": 0.0,
+          "familiarity_updated_at": null,
+          "status": "active",
+          "model_version": "eval-proxy-bge"
+        },
+        {
+          "key": "w2c3",
+          "chunk_id": "6eaacc87-b63e-5009-9943-d59fea242a62",
+          "article_id": "55fe9a03-7694-57b6-ac0f-25479c6c044b",
+          "article_key": "w2",
+          "title": "HNSW",
+          "chunk_index": 2,
+          "heading_path": [
+            "HNSW",
+            "适用场景"
+          ],
+          "raw_text": "HNSW 适合高维向量的在线近似最近邻检索，不适合需要精确全量扫描的场景。",
+          "importance": 0.5,
+          "familiarity_score": 0.0,
+          "familiarity_updated_at": null,
+          "status": "active",
+          "model_version": "eval-proxy-bge"
+        }
+      ]
+    },
+    {
+      "article_id": "701cc252-eb36-5573-839d-abb88d55698c",
+      "key": "w3",
+      "title": "LSTM",
+      "source": "memory-system-eval-handbook",
+      "source_url": "https://example.invalid/wiki/w3",
+      "source_page_id": "page-w3",
+      "revision_id": "rev-1",
+      "language": "zh",
+      "categories": [
+        "模型",
+        "序列"
+      ],
+      "status": "active",
+      "chunks": [
+        {
+          "key": "w3c1",
+          "chunk_id": "c0e0bd18-f823-593f-8638-1b6369171e1c",
+          "article_id": "701cc252-eb36-5573-839d-abb88d55698c",
+          "article_key": "w3",
+          "title": "LSTM",
+          "chunk_index": 0,
+          "heading_path": [
+            "LSTM",
+            "遗忘门"
+          ],
+          "raw_text": "LSTM 遗忘门通过 sigmoid 输出决定上一时刻细胞状态保留多少，首版实现不修改 PyTorch 门控内部。",
+          "importance": 0.7,
+          "familiarity_score": 0.0,
+          "familiarity_updated_at": null,
+          "status": "active",
+          "model_version": "eval-proxy-bge"
+        },
+        {
+          "key": "w3c2",
+          "chunk_id": "03a352af-d3b3-5daa-a20f-7ec96d59e9fa",
+          "article_id": "701cc252-eb36-5573-839d-abb88d55698c",
+          "article_key": "w3",
+          "title": "LSTM",
+          "chunk_index": 1,
+          "heading_path": [
+            "LSTM",
+            "状态更新"
+          ],
+          "raw_text": "细胞状态 c_t 与隐藏状态 h_t 在每个事件上迭代，事件向量取隐藏状态投影。",
+          "importance": 0.6,
+          "familiarity_score": 0.0,
+          "familiarity_updated_at": null,
+          "status": "active",
+          "model_version": "eval-proxy-bge"
+        },
+        {
+          "key": "w3c3",
+          "chunk_id": "e8d85da1-7042-59a4-885e-f39c8edfa36f",
+          "article_id": "701cc252-eb36-5573-839d-abb88d55698c",
+          "article_key": "w3",
+          "title": "LSTM",
+          "chunk_index": 2,
+          "heading_path": [
+            "LSTM",
+            "重放"
+          ],
+          "raw_text": "重放是在当前状态上额外执行一次前向更新，不增加事件顺序号，单事件最多重放 2 次。",
+          "importance": 0.5,
+          "familiarity_score": 0.0,
+          "familiarity_updated_at": null,
+          "status": "active",
+          "model_version": "eval-proxy-bge"
+        }
+      ]
+    },
+    {
+      "article_id": "53148f97-a85c-5379-aac9-c1ac2c61b3bb",
+      "key": "w4",
+      "title": "时间衰减",
+      "source": "memory-system-eval-handbook",
+      "source_url": "https://example.invalid/wiki/w4",
+      "source_page_id": "page-w4",
+      "revision_id": "rev-1",
+      "language": "zh",
+      "categories": [
+        "记忆",
+        "评分"
+      ],
+      "status": "active",
+      "chunks": [
+        {
+          "key": "w4c1",
+          "chunk_id": "468dbeac-2604-54e6-9eaf-1850fc6de58c",
+          "article_id": "53148f97-a85c-5379-aac9-c1ac2c61b3bb",
+          "article_key": "w4",
+          "title": "时间衰减",
+          "chunk_index": 0,
+          "heading_path": [
+            "时间衰减",
+            "公式"
+          ],
+          "raw_text": "事件基础衰减 D_event = initial_decay_score * exp(-DECAY_LAMBDA * age_days)。",
+          "importance": 0.6,
+          "familiarity_score": 0.0,
+          "familiarity_updated_at": null,
+          "status": "active",
+          "model_version": "eval-proxy-bge"
+        },
+        {
+          "key": "w4c2",
+          "chunk_id": "cf70fa23-9d8c-56a9-9413-18129253871d",
+          "article_id": "53148f97-a85c-5379-aac9-c1ac2c61b3bb",
+          "article_key": "w4",
+          "title": "时间衰减",
+          "chunk_index": 1,
+          "heading_path": [
+            "时间衰减",
+            "熟悉度"
+          ],
+          "raw_text": "熟悉度使有效记忆权重衰减更慢：W_event = min(D_event * (1 + 0.5 * F), 2.5)。",
+          "importance": 0.6,
+          "familiarity_score": 0.0,
+          "familiarity_updated_at": null,
+          "status": "active",
+          "model_version": "eval-proxy-bge"
+        },
+        {
+          "key": "w4c3",
+          "chunk_id": "834b243d-2673-5094-8007-a60fa595ba95",
+          "article_id": "53148f97-a85c-5379-aac9-c1ac2c61b3bb",
+          "article_key": "w4",
+          "title": "时间衰减",
+          "chunk_index": 2,
+          "heading_path": [
+            "时间衰减",
+            "归档"
+          ],
+          "raw_text": "delete_score 小于 0.1、事件超过 48 小时且非保护状态时才会自动归档。",
+          "importance": 0.5,
+          "familiarity_score": 0.0,
+          "familiarity_updated_at": null,
+          "status": "active",
+          "model_version": "eval-proxy-bge"
+        }
+      ]
+    },
+    {
+      "article_id": "dd5ec230-741a-5c4c-bb31-e0b7c978d95e",
+      "key": "w5",
+      "title": "nDCG",
+      "source": "memory-system-eval-handbook",
+      "source_url": "https://example.invalid/wiki/w5",
+      "source_page_id": "page-w5",
+      "revision_id": "rev-1",
+      "language": "zh",
+      "categories": [
+        "检索",
+        "指标"
+      ],
+      "status": "active",
+      "chunks": [
+        {
+          "key": "w5c1",
+          "chunk_id": "5f7f0105-ae98-5974-bb91-10438a65804b",
+          "article_id": "dd5ec230-741a-5c4c-bb31-e0b7c978d95e",
+          "article_key": "w5",
+          "title": "nDCG",
+          "chunk_index": 0,
+          "heading_path": [
+            "nDCG",
+            "定义"
+          ],
+          "raw_text": "nDCG 是归一化折损累计增益，用于衡量带相关性等级的排序质量。",
+          "importance": 0.6,
+          "familiarity_score": 0.0,
+          "familiarity_updated_at": null,
+          "status": "active",
+          "model_version": "eval-proxy-bge"
+        },
+        {
+          "key": "w5c2",
+          "chunk_id": "6251754c-dbf9-50fe-aeda-2b61ff10eabb",
+          "article_id": "dd5ec230-741a-5c4c-bb31-e0b7c978d95e",
+          "article_key": "w5",
+          "title": "nDCG",
+          "chunk_index": 1,
+          "heading_path": [
+            "nDCG",
+            "计算"
+          ],
+          "raw_text": "DCG 按位置折损累加相关性增益，nDCG 再用理想排序的 DCG 归一化。",
+          "importance": 0.6,
+          "familiarity_score": 0.16,
+          "familiarity_updated_at": "2026-04-08T00:00:00Z",
+          "status": "active",
+          "model_version": "eval-proxy-bge"
+        },
+        {
+          "key": "w5c3",
+          "chunk_id": "4a3c7489-c875-596f-ae6a-48d7c43766fd",
+          "article_id": "dd5ec230-741a-5c4c-bb31-e0b7c978d95e",
+          "article_key": "w5",
+          "title": "nDCG",
+          "chunk_index": 2,
+          "heading_path": [
+            "nDCG",
+            "用途"
+          ],
+          "raw_text": "nDCG 适合有多级相关性标注的排序评估，常与 Recall 和 MRR 一起报告。",
+          "importance": 0.5,
+          "familiarity_score": 0.0,
+          "familiarity_updated_at": null,
+          "status": "active",
+          "model_version": "eval-proxy-bge"
+        }
+      ]
+    },
+    {
+      "article_id": "559f382f-0036-5c00-a32b-1d04f5e99f1a",
+      "key": "w6",
+      "title": "Outbox",
+      "source": "memory-system-eval-handbook",
+      "source_url": "https://example.invalid/wiki/w6",
+      "source_page_id": "page-w6",
+      "revision_id": "rev-1",
+      "language": "zh",
+      "categories": [
+        "架构",
+        "可靠性"
+      ],
+      "status": "active",
+      "chunks": [
+        {
+          "key": "w6c1",
+          "chunk_id": "b9b1d379-86e8-5f44-a94d-07bce9ee2958",
+          "article_id": "559f382f-0036-5c00-a32b-1d04f5e99f1a",
+          "article_key": "w6",
+          "title": "Outbox",
+          "chunk_index": 0,
+          "heading_path": [
+            "Outbox",
+            "事务消息"
+          ],
+          "raw_text": "Outbox 与业务写入在同一数据库事务中落库，再由分发器投递到消息队列。",
+          "importance": 0.6,
+          "familiarity_score": 0.0,
+          "familiarity_updated_at": null,
+          "status": "active",
+          "model_version": "eval-proxy-bge"
+        },
+        {
+          "key": "w6c2",
+          "chunk_id": "1a14b75d-5617-5d93-8119-e3f7d647833c",
+          "article_id": "559f382f-0036-5c00-a32b-1d04f5e99f1a",
+          "article_key": "w6",
+          "title": "Outbox",
+          "chunk_index": 1,
+          "heading_path": [
+            "Outbox",
+            "重试"
+          ],
+          "raw_text": "分发失败时按退避策略重试，并记录重试次数与错误类型。",
+          "importance": 0.5,
+          "familiarity_score": 0.0,
+          "familiarity_updated_at": null,
+          "status": "active",
+          "model_version": "eval-proxy-bge"
+        },
+        {
+          "key": "w6c3",
+          "chunk_id": "c31916ec-0cf6-5e69-b3dd-4883225c915e",
+          "article_id": "559f382f-0036-5c00-a32b-1d04f5e99f1a",
+          "article_key": "w6",
+          "title": "Outbox",
+          "chunk_index": 2,
+          "heading_path": [
+            "Outbox",
+            "死信"
+          ],
+          "raw_text": "超过最大重试次数的消息进入死信，管理员可查询并重放死信任务。",
+          "importance": 0.5,
+          "familiarity_score": 0.0,
+          "familiarity_updated_at": null,
+          "status": "active",
+          "model_version": "eval-proxy-bge"
+        }
+      ]
+    },
+    {
+      "article_id": "ff73b429-ad36-5d28-832c-4c87276bafdd",
+      "key": "w7",
+      "title": "Pgvector",
+      "source": "memory-system-eval-handbook",
+      "source_url": "https://example.invalid/wiki/w7",
+      "source_page_id": "page-w7",
+      "revision_id": "rev-1",
+      "language": "zh",
+      "categories": [
+        "数据库",
+        "检索"
+      ],
+      "status": "active",
+      "chunks": [
+        {
+          "key": "w7c1",
+          "chunk_id": "0440b671-c0be-5797-9251-d45cc73cc847",
+          "article_id": "ff73b429-ad36-5d28-832c-4c87276bafdd",
+          "article_key": "w7",
+          "title": "Pgvector",
+          "chunk_index": 0,
+          "heading_path": [
+            "Pgvector",
+            "索引"
+          ],
+          "raw_text": "Pgvector 支持 HNSW 与 IVFFlat 索引，本系统事件与 Wiki 向量均使用 vector_cosine_ops。",
+          "importance": 0.6,
+          "familiarity_score": 0.0,
+          "familiarity_updated_at": null,
+          "status": "active",
+          "model_version": "eval-proxy-bge"
+        },
+        {
+          "key": "w7c2",
+          "chunk_id": "8f11b27f-4ed0-5f34-b79a-93676cddbaca",
+          "article_id": "ff73b429-ad36-5d28-832c-4c87276bafdd",
+          "article_key": "w7",
+          "title": "Pgvector",
+          "chunk_index": 1,
+          "heading_path": [
+            "Pgvector",
+            "距离算子"
+          ],
+          "raw_text": "余弦距离算子为 <=>，返回 1 - 余弦相似度，排序时按距离升序。",
+          "importance": 0.5,
+          "familiarity_score": 0.0,
+          "familiarity_updated_at": null,
+          "status": "active",
+          "model_version": "eval-proxy-bge"
+        },
+        {
+          "key": "w7c3",
+          "chunk_id": "96db21e8-ceb0-56e4-a07a-e3efe5c7082d",
+          "article_id": "ff73b429-ad36-5d28-832c-4c87276bafdd",
+          "article_key": "w7",
+          "title": "Pgvector",
+          "chunk_index": 2,
+          "heading_path": [
+            "Pgvector",
+            "过滤"
+          ],
+          "raw_text": "权限与标量过滤必须写入候选 SQL 的 WHERE 条件，在召回前生效，不能在排序后补过滤。",
+          "importance": 0.7,
+          "familiarity_score": 0.0,
+          "familiarity_updated_at": null,
+          "status": "active",
+          "model_version": "eval-proxy-bge"
+        }
+      ]
+    },
+    {
+      "article_id": "888fcdd5-d0ac-55cd-ac8d-05a30ad8d801",
+      "key": "w8",
+      "title": "幂等与反馈额度",
+      "source": "memory-system-eval-handbook",
+      "source_url": "https://example.invalid/wiki/w8",
+      "source_page_id": "page-w8",
+      "revision_id": "rev-1",
+      "language": "zh",
+      "categories": [
+        "反馈",
+        "评分"
+      ],
+      "status": "active",
+      "chunks": [
+        {
+          "key": "w8c1",
+          "chunk_id": "6da4866a-4304-5e17-8e15-a1a7284e75aa",
+          "article_id": "888fcdd5-d0ac-55cd-ac8d-05a30ad8d801",
+          "article_key": "w8",
+          "title": "幂等与反馈额度",
+          "chunk_index": 0,
+          "heading_path": [
+            "幂等",
+            "幂等键"
+          ],
+          "raw_text": "同一幂等键重复提交返回首次结果，不产生重复副作用。",
+          "importance": 0.5,
+          "familiarity_score": 0.0,
+          "familiarity_updated_at": null,
+          "status": "active",
+          "model_version": "eval-proxy-bge"
+        },
+        {
+          "key": "w8c2",
+          "chunk_id": "0665ec54-980b-5136-a0a5-c7eb03967ca7",
+          "article_id": "888fcdd5-d0ac-55cd-ac8d-05a30ad8d801",
+          "article_key": "w8",
+          "title": "幂等与反馈额度",
+          "chunk_index": 1,
+          "heading_path": [
+            "反馈",
+            "十分钟去重"
+          ],
+          "raw_text": "同会话、同一规范化查询哈希、同一记忆在 10 分钟内只计一次有效反馈。",
+          "importance": 0.6,
+          "familiarity_score": 0.0,
+          "familiarity_updated_at": null,
+          "status": "active",
+          "model_version": "eval-proxy-bge"
+        },
+        {
+          "key": "w8c3",
+          "chunk_id": "c8e6f88c-a641-5d26-9812-bf4b6f2a7beb",
+          "article_id": "888fcdd5-d0ac-55cd-ac8d-05a30ad8d801",
+          "article_key": "w8",
+          "title": "幂等与反馈额度",
+          "chunk_index": 2,
+          "heading_path": [
+            "反馈",
+            "每日额度"
+          ],
+          "raw_text": "单次有效反馈最多增加熟悉度 0.08，每日累计最多 0.3。",
+          "importance": 0.6,
+          "familiarity_score": 0.0,
+          "familiarity_updated_at": null,
+          "status": "active",
+          "model_version": "eval-proxy-bge"
+        }
+      ]
+    }
+  ],
+  "queries": [
+    {
+      "key": "q_alpha_threshold",
+      "query_id": "e7ddd7f2-cbe1-5ce7-8ed3-15dc3716c011",
+      "text": "项目 Alpha 之前确定的检索候选最低相似度是多少？",
+      "memory_type": "all",
+      "expected_intent": "event",
+      "event_labels": [
+        {
+          "key": "a1",
+          "gain": 2,
+          "memory_id": "3674f144-3d14-5cbb-9654-fae109017259"
+        },
+        {
+          "key": "a4",
+          "gain": 1,
+          "memory_id": "7350fbee-3efb-5c38-94a8-630c97979b00"
+        },
+        {
+          "key": "b1",
+          "gain": 1,
+          "memory_id": "046f6a4d-afa4-532f-b82a-7c99cadd4db0"
+        }
+      ],
+      "wiki_labels": [],
+      "slices": [],
+      "has_entity_filter": false,
+      "has_time_filter": false
+    },
+    {
+      "key": "q_alpha_rerank_risk",
+      "query_id": "1d4e0ee9-8c60-5eff-8434-f7b15298e756",
+      "text": "Alpha 精排 P95 超过目标后记录了什么风险？",
+      "memory_type": "all",
+      "expected_intent": "event",
+      "event_labels": [
+        {
+          "key": "a3",
+          "gain": 2,
+          "memory_id": "12e1b8ea-c952-5e0d-99d4-7ceebaa91c2a"
+        },
+        {
+          "key": "b2",
+          "gain": 1,
+          "memory_id": "d5a7bcb6-8edf-5044-8e9e-51428871cb88"
+        }
+      ],
+      "wiki_labels": [],
+      "slices": [],
+      "has_entity_filter": false,
+      "has_time_filter": false
+    },
+    {
+      "key": "q_alpha_gray",
+      "query_id": "ce510f5e-ab2c-52f0-a1d7-eee879b34093",
+      "text": "Alpha 项目灰度结果如何？",
+      "memory_type": "all",
+      "expected_intent": "event",
+      "event_labels": [
+        {
+          "key": "a7",
+          "gain": 2,
+          "memory_id": "9890bf3e-3472-5b05-920c-dbd96ffc719e"
+        },
+        {
+          "key": "a2",
+          "gain": 1,
+          "memory_id": "88cb8ce7-c79d-542d-966e-6bf221e46076"
+        }
+      ],
+      "wiki_labels": [],
+      "slices": [],
+      "has_entity_filter": false,
+      "has_time_filter": false
+    },
+    {
+      "key": "q_beta_compare",
+      "query_id": "b8420e3d-6302-5564-99a7-66371956f611",
+      "text": "Beta 的候选数和阈值与 Alpha 有何不同？",
+      "memory_type": "all",
+      "expected_intent": "event",
+      "event_labels": [
+        {
+          "key": "b1",
+          "gain": 2,
+          "memory_id": "046f6a4d-afa4-532f-b82a-7c99cadd4db0"
+        },
+        {
+          "key": "a1",
+          "gain": 1,
+          "memory_id": "3674f144-3d14-5cbb-9654-fae109017259"
+        }
+      ],
+      "wiki_labels": [],
+      "slices": [],
+      "has_entity_filter": false,
+      "has_time_filter": false
+    },
+    {
+      "key": "q_zhang_theme",
+      "query_id": "a91a6542-2d68-5d9e-a477-7481864626a7",
+      "text": "张伟偏好什么主题？",
+      "memory_type": "all",
+      "expected_intent": "event",
+      "event_labels": [
+        {
+          "key": "z1",
+          "gain": 2,
+          "memory_id": "897beee3-1ec9-5847-afc8-bc0ad35dedf1"
+        }
+      ],
+      "wiki_labels": [],
+      "slices": [],
+      "has_entity_filter": false,
+      "has_time_filter": false
+    },
+    {
+      "key": "q_zhang_review",
+      "query_id": "7537acb0-bbfa-5a11-a261-66571c6c1288",
+      "text": "张伟每周什么时候做评审？",
+      "memory_type": "event",
+      "expected_intent": "event",
+      "event_labels": [
+        {
+          "key": "z2",
+          "gain": 2,
+          "memory_id": "01cfd0ea-f9c4-5d05-bcab-d5c55ffa5f80"
+        }
+      ],
+      "wiki_labels": [],
+      "slices": [],
+      "has_entity_filter": false,
+      "has_time_filter": false
+    },
+    {
+      "key": "q_lina_cold",
+      "query_id": "f261b87a-1969-509e-969e-daa4c1deca99",
+      "text": "李娜为什么关注冷启动指标？",
+      "memory_type": "all",
+      "expected_intent": "event",
+      "event_labels": [
+        {
+          "key": "l2",
+          "gain": 2,
+          "memory_id": "61f7530d-9b2a-5937-9d66-623d769844d6"
+        },
+        {
+          "key": "l1",
+          "gain": 1,
+          "memory_id": "6c0e0e6b-769a-5aec-b9d4-3ea554c4eb18"
+        }
+      ],
+      "wiki_labels": [],
+      "slices": [],
+      "has_entity_filter": false,
+      "has_time_filter": false
+    },
+    {
+      "key": "q_team_cadence",
+      "query_id": "c44197d0-fc21-5e09-b58d-f530676a1810",
+      "text": "检索组多久做一次基线评估？",
+      "memory_type": "event",
+      "expected_intent": "event",
+      "event_labels": [
+        {
+          "key": "t1",
+          "gain": 2,
+          "memory_id": "8b8e4e18-82f8-50f7-b500-0b2cde736a82"
+        },
+        {
+          "key": "t2",
+          "gain": 1,
+          "memory_id": "46ed847d-1499-5b16-b25a-30a50cea84ba"
+        }
+      ],
+      "wiki_labels": [],
+      "slices": [],
+      "has_entity_filter": false,
+      "has_time_filter": false
+    },
+    {
+      "key": "q_ops_cuda",
+      "query_id": "a8ecf83e-1a46-5b54-be39-d1ca2c77d607",
+      "text": "模型运维为什么放弃带 CUDA 的镜像？",
+      "memory_type": "all",
+      "expected_intent": "event",
+      "event_labels": [
+        {
+          "key": "o2",
+          "gain": 2,
+          "memory_id": "d7a89272-025c-5672-a52c-73dcdba05f96"
+        },
+        {
+          "key": "o3",
+          "gain": 1,
+          "memory_id": "0d85b41c-62b8-5ec6-a27b-66b71f5e0ed7"
+        }
+      ],
+      "wiki_labels": [],
+      "slices": [],
+      "has_entity_filter": false,
+      "has_time_filter": false
+    },
+    {
+      "key": "q_xinghe_delete",
+      "query_id": "328e9db4-c866-55de-b6f5-ad71ccab5da1",
+      "text": "客户星河科技对删除有什么要求？",
+      "memory_type": "event",
+      "expected_intent": "event",
+      "event_labels": [
+        {
+          "key": "x2",
+          "gain": 2,
+          "memory_id": "1257fb1d-3119-5d92-aa6f-78e09ebe6fbe"
+        },
+        {
+          "key": "x1",
+          "gain": 1,
+          "memory_id": "8c16948d-6197-5006-917a-0162b66f6bca"
+        }
+      ],
+      "wiki_labels": [],
+      "slices": [],
+      "has_entity_filter": false,
+      "has_time_filter": false
+    },
+    {
+      "key": "q_yunhai_data",
+      "query_id": "51dbbce9-9639-5a29-a94a-48c5b07e27f1",
+      "text": "云海制造的数据量有多大？",
+      "memory_type": "event",
+      "expected_intent": "event",
+      "event_labels": [
+        {
+          "key": "y2",
+          "gain": 2,
+          "memory_id": "1661044a-dbb2-57ab-90a6-847b8ce2bb81"
+        },
+        {
+          "key": "x3",
+          "gain": 1,
+          "memory_id": "79c4b731-5488-5cfd-911e-30c37f872319"
+        }
+      ],
+      "wiki_labels": [],
+      "slices": [],
+      "has_entity_filter": false,
+      "has_time_filter": false
+    },
+    {
+      "key": "q_pipe_third",
+      "query_id": "5085fbb3-7966-5977-bf2b-ebbf8a41f653",
+      "text": "发布流水线第 3 次发布改了什么阈值？",
+      "memory_type": "all",
+      "expected_intent": "event",
+      "event_labels": [
+        {
+          "key": "p3",
+          "gain": 2,
+          "memory_id": "ad9da3b8-e33a-5da9-86bc-680626149cdd"
+        },
+        {
+          "key": "p11",
+          "gain": 1,
+          "memory_id": "3060111f-125a-5f0f-a024-78de77cc8a1e"
+        }
+      ],
+      "wiki_labels": [],
+      "slices": [
+        "time_sensitive",
+        "long_sequence"
+      ],
+      "has_entity_filter": false,
+      "has_time_filter": false
+    },
+    {
+      "key": "q_pipe_latest",
+      "query_id": "30011eaf-0da5-5250-8dea-bbc18fc69ea2",
+      "text": "发布流水线最近一次发布把阈值调成了多少？",
+      "memory_type": "all",
+      "expected_intent": "event",
+      "event_labels": [
+        {
+          "key": "p11",
+          "gain": 2,
+          "memory_id": "3060111f-125a-5f0f-a024-78de77cc8a1e"
+        },
+        {
+          "key": "p10",
+          "gain": 1,
+          "memory_id": "d00c1917-0df6-505a-b590-993d59891c96"
+        }
+      ],
+      "wiki_labels": [],
+      "slices": [
+        "time_sensitive",
+        "long_sequence"
+      ],
+      "has_entity_filter": false,
+      "has_time_filter": false
+    },
+    {
+      "key": "q_coffee",
+      "query_id": "3820820c-e690-5a45-aa04-154b563b02b0",
+      "text": "用户早上喝什么咖啡？",
+      "memory_type": "all",
+      "expected_intent": "event",
+      "event_labels": [
+        {
+          "key": "c1",
+          "gain": 2,
+          "memory_id": "3f367394-678e-5455-aca0-d06a9ecc8870"
+        }
+      ],
+      "wiki_labels": [],
+      "slices": [
+        "cold_start"
+      ],
+      "has_entity_filter": false,
+      "has_time_filter": false
+    },
+    {
+      "key": "q_timezone",
+      "query_id": "6935cfae-9a13-53fc-a0df-0b10710436d9",
+      "text": "用户所在时区是什么？",
+      "memory_type": "all",
+      "expected_intent": "event",
+      "event_labels": [
+        {
+          "key": "u1",
+          "gain": 2,
+          "memory_id": "de1422fb-e723-55fd-9c1a-ca6c28de9523"
+        }
+      ],
+      "wiki_labels": [],
+      "slices": [
+        "cold_start"
+      ],
+      "has_entity_filter": false,
+      "has_time_filter": false
+    },
+    {
+      "key": "q_frontend_chart",
+      "query_id": "5a363890-c129-5abb-8f14-c8ce2ec30570",
+      "text": "前端控制台用的什么图表库？",
+      "memory_type": "event",
+      "expected_intent": "event",
+      "event_labels": [
+        {
+          "key": "f2",
+          "gain": 2,
+          "memory_id": "da3db0c1-134d-5bd5-b414-9b64422c56a2"
+        }
+      ],
+      "wiki_labels": [],
+      "slices": [],
+      "has_entity_filter": false,
+      "has_time_filter": false
+    },
+    {
+      "key": "q_cosine",
+      "query_id": "704dd5f2-2b20-5355-b74d-56c5b8c34ea8",
+      "text": "什么是余弦相似度？",
+      "memory_type": "wiki",
+      "expected_intent": "wiki",
+      "event_labels": [],
+      "wiki_labels": [
+        {
+          "key": "w1c1",
+          "gain": 2,
+          "memory_id": "a69c8c64-f9d5-5bbc-a86d-76d72dc015a7"
+        },
+        {
+          "key": "w1c2",
+          "gain": 1,
+          "memory_id": "b6d15987-6b03-5133-b13f-807af43e4bf6"
+        }
+      ],
+      "slices": [],
+      "has_entity_filter": false,
+      "has_time_filter": false
+    },
+    {
+      "key": "q_hnsw",
+      "query_id": "5c7794e1-dfdb-5d5e-818c-95cba54eae00",
+      "text": "HNSW 索引适合什么场景？",
+      "memory_type": "all",
+      "expected_intent": "wiki",
+      "event_labels": [],
+      "wiki_labels": [
+        {
+          "key": "w2c1",
+          "gain": 2,
+          "memory_id": "5f462bc7-88bf-5917-9f90-796216d09679"
+        },
+        {
+          "key": "w2c3",
+          "gain": 1,
+          "memory_id": "6eaacc87-b63e-5009-9943-d59fea242a62"
+        }
+      ],
+      "slices": [],
+      "has_entity_filter": false,
+      "has_time_filter": false
+    },
+    {
+      "key": "q_lstm",
+      "query_id": "92ea7390-4bcf-54d5-b124-39c5e6965030",
+      "text": "LSTM 的遗忘门如何工作？",
+      "memory_type": "all",
+      "expected_intent": "wiki",
+      "event_labels": [],
+      "wiki_labels": [
+        {
+          "key": "w3c1",
+          "gain": 2,
+          "memory_id": "c0e0bd18-f823-593f-8638-1b6369171e1c"
+        },
+        {
+          "key": "w3c2",
+          "gain": 1,
+          "memory_id": "03a352af-d3b3-5daa-a20f-7ec96d59e9fa"
+        }
+      ],
+      "slices": [],
+      "has_entity_filter": false,
+      "has_time_filter": false
+    },
+    {
+      "key": "q_decay",
+      "query_id": "4ea04d95-ff59-5568-bb41-609092cb119f",
+      "text": "事件衰减公式里的 lambda 是什么？",
+      "memory_type": "wiki",
+      "expected_intent": "wiki",
+      "event_labels": [],
+      "wiki_labels": [
+        {
+          "key": "w4c1",
+          "gain": 2,
+          "memory_id": "468dbeac-2604-54e6-9eaf-1850fc6de58c"
+        },
+        {
+          "key": "w4c2",
+          "gain": 1,
+          "memory_id": "cf70fa23-9d8c-56a9-9413-18129253871d"
+        }
+      ],
+      "slices": [],
+      "has_entity_filter": false,
+      "has_time_filter": false
+    },
+    {
+      "key": "q_ndcg",
+      "query_id": "95b893f0-9046-5571-b8f8-e11110ef4977",
+      "text": "nDCG 怎么计算？",
+      "memory_type": "all",
+      "expected_intent": "wiki",
+      "event_labels": [],
+      "wiki_labels": [
+        {
+          "key": "w5c2",
+          "gain": 2,
+          "memory_id": "6251754c-dbf9-50fe-aeda-2b61ff10eabb"
+        },
+        {
+          "key": "w5c1",
+          "gain": 1,
+          "memory_id": "5f7f0105-ae98-5974-bb91-10438a65804b"
+        }
+      ],
+      "slices": [],
+      "has_entity_filter": false,
+      "has_time_filter": false
+    },
+    {
+      "key": "q_outbox",
+      "query_id": "07f38fd6-64a8-5037-8c54-74da4060416f",
+      "text": "Outbox 死信怎么处理？",
+      "memory_type": "all",
+      "expected_intent": "wiki",
+      "event_labels": [],
+      "wiki_labels": [
+        {
+          "key": "w6c3",
+          "gain": 2,
+          "memory_id": "c31916ec-0cf6-5e69-b3dd-4883225c915e"
+        },
+        {
+          "key": "w6c2",
+          "gain": 1,
+          "memory_id": "1a14b75d-5617-5d93-8119-e3f7d647833c"
+        }
+      ],
+      "slices": [],
+      "has_entity_filter": false,
+      "has_time_filter": false
+    },
+    {
+      "key": "q_pgvector_filter",
+      "query_id": "093c5e18-3085-5dbf-a2db-f910cd2bc248",
+      "text": "Pgvector 如何在召回前做权限过滤？",
+      "memory_type": "all",
+      "expected_intent": "wiki",
+      "event_labels": [],
+      "wiki_labels": [
+        {
+          "key": "w7c3",
+          "gain": 2,
+          "memory_id": "96db21e8-ceb0-56e4-a07a-e3efe5c7082d"
+        },
+        {
+          "key": "w7c1",
+          "gain": 1,
+          "memory_id": "0440b671-c0be-5797-9251-d45cc73cc847"
+        }
+      ],
+      "slices": [],
+      "has_entity_filter": false,
+      "has_time_filter": false
+    },
+    {
+      "key": "q_feedback_dedup",
+      "query_id": "0a07cb05-47f1-51ff-999e-228698b14507",
+      "text": "反馈去重的十分钟规则是什么？",
+      "memory_type": "wiki",
+      "expected_intent": "wiki",
+      "event_labels": [],
+      "wiki_labels": [
+        {
+          "key": "w8c2",
+          "gain": 2,
+          "memory_id": "0665ec54-980b-5136-a0a5-c7eb03967ca7"
+        },
+        {
+          "key": "w8c3",
+          "gain": 1,
+          "memory_id": "c8e6f88c-a641-5d26-9812-bf4b6f2a7beb"
+        }
+      ],
+      "slices": [],
+      "has_entity_filter": false,
+      "has_time_filter": false
+    },
+    {
+      "key": "q_team_ranking",
+      "query_id": "6bdee729-d201-5428-9e6f-13f2ab98d2df",
+      "text": "检索组如何评估排序质量？",
+      "memory_type": "all",
+      "expected_intent": "mixed",
+      "event_labels": [
+        {
+          "key": "t1",
+          "gain": 2,
+          "memory_id": "8b8e4e18-82f8-50f7-b500-0b2cde736a82"
+        },
+        {
+          "key": "t2",
+          "gain": 1,
+          "memory_id": "46ed847d-1499-5b16-b25a-30a50cea84ba"
+        }
+      ],
+      "wiki_labels": [
+        {
+          "key": "w5c3",
+          "gain": 1,
+          "memory_id": "4a3c7489-c875-596f-ae6a-48d7c43766fd"
+        }
+      ],
+      "slices": [],
+      "has_entity_filter": false,
+      "has_time_filter": false
+    },
+    {
+      "key": "q_alpha_cosine",
+      "query_id": "b3a50808-b1e5-5aa6-a641-53157b265b89",
+      "text": "Alpha 的阈值和余弦相似度的关系？",
+      "memory_type": "all",
+      "expected_intent": "mixed",
+      "event_labels": [
+        {
+          "key": "a1",
+          "gain": 2,
+          "memory_id": "3674f144-3d14-5cbb-9654-fae109017259"
+        }
+      ],
+      "wiki_labels": [
+        {
+          "key": "w1c1",
+          "gain": 1,
+          "memory_id": "a69c8c64-f9d5-5bbc-a86d-76d72dc015a7"
+        },
+        {
+          "key": "w1c3",
+          "gain": 1,
+          "memory_id": "eb76d82b-cf08-5921-80d7-14521efca7fb"
+        }
+      ],
+      "slices": [],
+      "has_entity_filter": false,
+      "has_time_filter": false
+    },
+    {
+      "key": "q_ops_outbox",
+      "query_id": "8ea826f2-047a-524c-acd8-1858d72c2446",
+      "text": "模型运维的镜像方案和 Outbox 有关吗？",
+      "memory_type": "all",
+      "expected_intent": "mixed",
+      "event_labels": [
+        {
+          "key": "o3",
+          "gain": 1,
+          "memory_id": "0d85b41c-62b8-5ec6-a27b-66b71f5e0ed7"
+        },
+        {
+          "key": "o4",
+          "gain": 1,
+          "memory_id": "b336a35d-366c-5a9c-af0e-1eb5f5a06299"
+        }
+      ],
+      "wiki_labels": [
+        {
+          "key": "w6c1",
+          "gain": 1,
+          "memory_id": "b9b1d379-86e8-5f44-a94d-07bce9ee2958"
+        }
+      ],
+      "slices": [],
+      "has_entity_filter": false,
+      "has_time_filter": false
+    },
+    {
+      "key": "q_pipe_who",
+      "query_id": "aeea71a0-ee9f-5cf9-91ce-ed7938cfe7b2",
+      "text": "发布流水线的阈值后来又被谁调整过？",
+      "memory_type": "event",
+      "expected_intent": "event",
+      "event_labels": [
+        {
+          "key": "p11",
+          "gain": 2,
+          "memory_id": "3060111f-125a-5f0f-a024-78de77cc8a1e"
+        },
+        {
+          "key": "p3",
+          "gain": 1,
+          "memory_id": "ad9da3b8-e33a-5da9-86bc-680626149cdd"
+        }
+      ],
+      "wiki_labels": [],
+      "slices": [
+        "time_sensitive",
+        "long_sequence"
+      ],
+      "has_entity_filter": false,
+      "has_time_filter": false
+    },
+    {
+      "key": "q_customers",
+      "query_id": "fce5d106-6837-5e30-b6f4-c545b7f43c95",
+      "text": "星河科技和云海制造分别处于什么阶段？",
+      "memory_type": "all",
+      "expected_intent": "mixed",
+      "event_labels": [
+        {
+          "key": "x1",
+          "gain": 2,
+          "memory_id": "8c16948d-6197-5006-917a-0162b66f6bca"
+        },
+        {
+          "key": "y1",
+          "gain": 2,
+          "memory_id": "18970b21-db93-5759-b53d-da29f98069dc"
+        }
+      ],
+      "wiki_labels": [],
+      "slices": [],
+      "has_entity_filter": false,
+      "has_time_filter": false
+    },
+    {
+      "key": "q_idempotent",
+      "query_id": "0ec0bcaa-8559-54ad-892b-8a3c27d0a5e4",
+      "text": "幂等键重复提交会怎样？",
+      "memory_type": "all",
+      "expected_intent": "wiki",
+      "event_labels": [],
+      "wiki_labels": [
+        {
+          "key": "w8c1",
+          "gain": 2,
+          "memory_id": "6da4866a-4304-5e17-8e15-a1a7284e75aa"
+        },
+        {
+          "key": "w8c2",
+          "gain": 1,
+          "memory_id": "0665ec54-980b-5136-a0a5-c7eb03967ca7"
+        }
+      ],
+      "slices": [],
+      "has_entity_filter": false,
+      "has_time_filter": false
+    },
+    {
+      "key": "q_latest_eval",
+      "query_id": "391ab5e3-73be-543c-a7f6-fafb6f41617b",
+      "text": "最近一次基线评估发现了哪些短板？",
+      "memory_type": "all",
+      "expected_intent": "mixed",
+      "event_labels": [
+        {
+          "key": "t2",
+          "gain": 2,
+          "memory_id": "46ed847d-1499-5b16-b25a-30a50cea84ba"
+        },
+        {
+          "key": "t3",
+          "gain": 1,
+          "memory_id": "262e6f16-2448-59e7-8631-d0fff1238242"
+        }
+      ],
+      "wiki_labels": [],
+      "slices": [
+        "time_sensitive"
+      ],
+      "has_entity_filter": false,
+      "has_time_filter": false
+    },
+    {
+      "key": "q_vague_threshold",
+      "query_id": "496429f7-4f9f-513d-b69e-c8b214b7d0ba",
+      "text": "向量候选下限是多少？",
+      "memory_type": "all",
+      "expected_intent": "event",
+      "event_labels": [
+        {
+          "key": "a1",
+          "gain": 2,
+          "memory_id": "3674f144-3d14-5cbb-9654-fae109017259"
+        },
+        {
+          "key": "b1",
+          "gain": 1,
+          "memory_id": "046f6a4d-afa4-532f-b82a-7c99cadd4db0"
+        }
+      ],
+      "wiki_labels": [],
+      "slices": [],
+      "has_entity_filter": false,
+      "has_time_filter": false
+    },
+    {
+      "key": "q_working_memory_cleanup",
+      "query_id": "b9f31593-80e6-53f5-81b0-412f436e5592",
+      "text": "多久清一次过期的工作记忆？",
+      "memory_type": "all",
+      "expected_intent": "event",
+      "event_labels": [
+        {
+          "key": "o5",
+          "gain": 2,
+          "memory_id": "cecced9e-adcf-52b7-9a6d-23bcd490bd30"
+        }
+      ],
+      "wiki_labels": [],
+      "slices": [],
+      "has_entity_filter": false,
+      "has_time_filter": false
+    },
+    {
+      "key": "q_replay_limit",
+      "query_id": "a225bf53-2c40-5991-8546-d89e851ed58b",
+      "text": "重放次数上限是多少？",
+      "memory_type": "all",
+      "expected_intent": "wiki",
+      "event_labels": [],
+      "wiki_labels": [
+        {
+          "key": "w3c3",
+          "gain": 2,
+          "memory_id": "e8d85da1-7042-59a4-885e-f39c8edfa36f"
+        }
+      ],
+      "slices": [],
+      "has_entity_filter": false,
+      "has_time_filter": false
+    }
+  ],
+  "feedback": [
+    {
+      "query_id": "e7ddd7f2-cbe1-5ce7-8ed3-15dc3716c011",
+      "memory_type": "event",
+      "memory_id": "3674f144-3d14-5cbb-9654-fae109017259",
+      "feedback_type": "helpful",
+      "is_counted": true,
+      "sequence": 1
+    },
+    {
+      "query_id": "e7ddd7f2-cbe1-5ce7-8ed3-15dc3716c011",
+      "memory_type": "event",
+      "memory_id": "3674f144-3d14-5cbb-9654-fae109017259",
+      "feedback_type": "helpful",
+      "is_counted": true,
+      "sequence": 2
+    },
+    {
+      "query_id": "1d4e0ee9-8c60-5eff-8434-f7b15298e756",
+      "memory_type": "event",
+      "memory_id": "12e1b8ea-c952-5e0d-99d4-7ceebaa91c2a",
+      "feedback_type": "adopted",
+      "is_counted": true,
+      "sequence": 1
+    },
+    {
+      "query_id": "c44197d0-fc21-5e09-b58d-f530676a1810",
+      "memory_type": "event",
+      "memory_id": "8b8e4e18-82f8-50f7-b500-0b2cde736a82",
+      "feedback_type": "adopted",
+      "is_counted": true,
+      "sequence": 1
+    },
+    {
+      "query_id": "c44197d0-fc21-5e09-b58d-f530676a1810",
+      "memory_type": "event",
+      "memory_id": "8b8e4e18-82f8-50f7-b500-0b2cde736a82",
+      "feedback_type": "adopted",
+      "is_counted": true,
+      "sequence": 2
+    },
+    {
+      "query_id": "c44197d0-fc21-5e09-b58d-f530676a1810",
+      "memory_type": "event",
+      "memory_id": "8b8e4e18-82f8-50f7-b500-0b2cde736a82",
+      "feedback_type": "adopted",
+      "is_counted": true,
+      "sequence": 3
+    },
+    {
+      "query_id": "5085fbb3-7966-5977-bf2b-ebbf8a41f653",
+      "memory_type": "event",
+      "memory_id": "ad9da3b8-e33a-5da9-86bc-680626149cdd",
+      "feedback_type": "helpful",
+      "is_counted": true,
+      "sequence": 1
+    },
+    {
+      "query_id": "5085fbb3-7966-5977-bf2b-ebbf8a41f653",
+      "memory_type": "event",
+      "memory_id": "ad9da3b8-e33a-5da9-86bc-680626149cdd",
+      "feedback_type": "helpful",
+      "is_counted": true,
+      "sequence": 2
+    },
+    {
+      "query_id": "5085fbb3-7966-5977-bf2b-ebbf8a41f653",
+      "memory_type": "event",
+      "memory_id": "ad9da3b8-e33a-5da9-86bc-680626149cdd",
+      "feedback_type": "helpful",
+      "is_counted": true,
+      "sequence": 3
+    },
+    {
+      "query_id": "5085fbb3-7966-5977-bf2b-ebbf8a41f653",
+      "memory_type": "event",
+      "memory_id": "3060111f-125a-5f0f-a024-78de77cc8a1e",
+      "feedback_type": "helpful",
+      "is_counted": true,
+      "sequence": 1
+    },
+    {
+      "query_id": "5085fbb3-7966-5977-bf2b-ebbf8a41f653",
+      "memory_type": "event",
+      "memory_id": "3060111f-125a-5f0f-a024-78de77cc8a1e",
+      "feedback_type": "helpful",
+      "is_counted": true,
+      "sequence": 2
+    },
+    {
+      "query_id": "a91a6542-2d68-5d9e-a477-7481864626a7",
+      "memory_type": "event",
+      "memory_id": "897beee3-1ec9-5847-afc8-bc0ad35dedf1",
+      "feedback_type": "helpful",
+      "is_counted": true,
+      "sequence": 1
+    },
+    {
+      "query_id": "a91a6542-2d68-5d9e-a477-7481864626a7",
+      "memory_type": "event",
+      "memory_id": "897beee3-1ec9-5847-afc8-bc0ad35dedf1",
+      "feedback_type": "helpful",
+      "is_counted": true,
+      "sequence": 2
+    },
+    {
+      "query_id": "704dd5f2-2b20-5355-b74d-56c5b8c34ea8",
+      "memory_type": "wiki",
+      "memory_id": "a69c8c64-f9d5-5bbc-a86d-76d72dc015a7",
+      "feedback_type": "helpful",
+      "is_counted": true,
+      "sequence": 1
+    },
+    {
+      "query_id": "704dd5f2-2b20-5355-b74d-56c5b8c34ea8",
+      "memory_type": "wiki",
+      "memory_id": "a69c8c64-f9d5-5bbc-a86d-76d72dc015a7",
+      "feedback_type": "helpful",
+      "is_counted": true,
+      "sequence": 2
+    },
+    {
+      "query_id": "704dd5f2-2b20-5355-b74d-56c5b8c34ea8",
+      "memory_type": "wiki",
+      "memory_id": "a69c8c64-f9d5-5bbc-a86d-76d72dc015a7",
+      "feedback_type": "helpful",
+      "is_counted": true,
+      "sequence": 3
+    },
+    {
+      "query_id": "95b893f0-9046-5571-b8f8-e11110ef4977",
+      "memory_type": "wiki",
+      "memory_id": "6251754c-dbf9-50fe-aeda-2b61ff10eabb",
+      "feedback_type": "adopted",
+      "is_counted": true,
+      "sequence": 1
+    },
+    {
+      "query_id": "95b893f0-9046-5571-b8f8-e11110ef4977",
+      "memory_type": "wiki",
+      "memory_id": "6251754c-dbf9-50fe-aeda-2b61ff10eabb",
+      "feedback_type": "adopted",
+      "is_counted": true,
+      "sequence": 2
+    }
+  ]
+}
