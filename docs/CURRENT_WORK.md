@@ -3,7 +3,7 @@
 - 并行分工：本会话负责后端与基础设施（`backend/`、`infra/`、数据库与迁移、Celery），**不再改动 `frontend/`**；前端由另一会话并行开发。契约以 `docs/API_CONTRACT.md` 和 `docs/api/openapi.json` 为准。
 - 当前阶段：M4（安全与观测）已完成；M3 联调反馈与 M4 的质量评估/故障恢复验收待推进。
 - 已完成：
-  - 后端工程骨架、16 表初始迁移、认证与基础服务、启动预检、Next.js 路由骨架、容器编排（M0）。
+  - 后端工程骨架、17 表可逆迁移（初始 16 表 + `retrieval_hit_gain`）、认证与基础服务、启动预检、Next.js 路由骨架、容器编排（M0）。
   - 事件写入/纠正/删除/恢复、工作记忆巩固、双路检索与反馈闭环、实体状态/Replay/Rebuild、Job、Dashboard、管理员熟悉度 API（M1）。
   - Wiki 词条/知识块/来源链、全量/增量/重编码同步、同步任务与 Celery 任务、7 条 `/api/v1/wiki/*` 路由（M2）。
   - 联调对齐：新增 `GET /entities/{entity_id}/events`；Dashboard 恢复 viewer+；Wiki 同步任务读取改为 viewer+、搜索参数定为 `q`。
@@ -13,8 +13,9 @@
   - 迁移清单补充模型下载（HuggingFace / ModelScope、目录对应、验证、离线拷贝）与第三方 Embedding/Reranker 对接（按代码现状：OpenAI 兼容 `/embeddings`、`POST /rerank`、重试与错误映射、维度与旧数据重建限制）；部署文档新增 3.1、4.3 两节。
   - 新增仓库根 [README.md](../README.md)：项目定位、架构与数据流、目录职责、快速开始、配置分组、接口概览、权限模型、前端、AG-07 评估定位、测试命令与已知限制。
   - README 补充第 0 节：按代码讲清 LSTM 事件编码器（窗口 16、1024→256 投影、单层 LSTM hidden 256、`(h,c)` 快照、版本不一致重建），并把衰减/归档/清除/过期等记忆层遗忘机制与模型层门控分开表述。
+  - 检索命中强化闭环：`POST /memory/search` 提交后以 BackgroundTasks 异步执行 `delta = 0.02 × (1 - F)`，独立 Session/UoW、失败只记日志；`retrieval_hit_gain` 提供 60 分钟时间窗 + 自然日唯一约束两层去重，不占反馈的每日 0.3 上限；反馈路径与 REPLAY 触发不变。
 - 已验证：
-  - 后端 110 项测试通过（2 项 PostgreSQL 集成测试在启用 `RUN_POSTGRES_INTEGRATION=1` 时运行并通过）。
+  - 后端 115 项单元测试通过；5 项 PostgreSQL 集成测试在启用 `RUN_POSTGRES_INTEGRATION=1` 时运行并通过（`test_postgres_integration.py` 3 项、`test_wiki_integration.py` 2 项）。
   - M4：安全响应头、413/429、`/metrics`、就绪模型检查、Outbox 死信重放均已通过测试；Outbox 死信另在真实 PostgreSQL 上验证通过。
   - 事件写入 → 检索 → 反馈 → 重放 → 重建完整链路在真实 PostgreSQL + Pgvector 上通过。
   - Wiki 全量同步、重复同步去重、内容更新块失效、来源删除、重编码、失败重试与并发冲突在真实 PostgreSQL + Pgvector 上通过。
@@ -22,7 +23,7 @@
   - `ruff check backend` 通过。
   - 训练 CLI 端到端通过，模型包可被运行期 `LSTMEventEncoder` 严格加载。
   - 前端 lint、typecheck、2 项测试、生产构建通过。
-- 数据状态：Compose 数据库上次恢复到 Alembic head `74a69ff68f54`（16 张业务表 + Pgvector 0.8.7）。
+- 数据状态：迁移脚本 head 为 `3c9d2a7e5b11`（17 张业务表 + Pgvector 0.8.7）；Compose 数据库上次恢复到 `74a69ff68f54`，启动前需执行 `alembic upgrade head` 增加 `retrieval_hit_gain`。
 - 当前端口：Compose 数据库使用 `POSTGRES_PORT=55432`（本机 PostgreSQL 18 占用 5432），Redis 使用 `REDIS_PORT=56379`（本机 6379 被占用）。
 - 尚未启动：完整 API/Worker/Web/Nginx 栈。必须先提供有效 Embedding/Reranker/事件模型配置并通过 `python -m app.bootstrap`，不使用伪造模型结果绕过。
 - 解释器：统一使用 `.venv312`（Python 3.12.9）；依赖镜像配置见 `infra/pip.ini` 与 `scripts/install.ps1`。

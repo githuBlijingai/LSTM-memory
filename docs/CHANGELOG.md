@@ -781,6 +781,62 @@
   `backend/app/domain/lifecycle.py`、`backend/app/services/memory_writes.py`
   与 `backend/app/core/config.py` 的默认值。
 
+## 2026-11-24 · MEM-04 检索命中强化熟悉度
+
+### 修改内容
+
+- 新增 `retrieval_hit_gain` 表（模型 `RetrievalHitGain`、迁移 `3c9d2a7e5b11`）：
+  记录 `actor_id`、`query_hash`、`memory_type`、`memory_id`、`gain_date`、
+  `gained_score`、`hit_at`；唯一约束
+  `(actor_id, query_hash, memory_type, memory_id, gain_date)`
+  承担“同一查询每天最多一次”的计数语义。
+- 新增 `RetrievalReinforcementService` 与 `normalize_query_fingerprint`：
+  命中增量 `delta = RETRIEVAL_HIT_FAMILIARITY_STEP × max(0, 1 - F)`，
+  写回 `familiarity_score = min(1.0, F + delta)` 和
+  `familiarity_updated_at`，不推进 `access_count` / `last_access_time`。
+- 两层去重：60 分钟时间窗（`hit_at >= now - RETRIEVAL_HIT_DEDUP_MINUTES`）
+  + 自然日唯一约束；插入使用 `ON CONFLICT DO NOTHING`，并发或重放不重复加分。
+- `POST /memory/search` 在 `uow.commit()` 之后通过 FastAPI `BackgroundTasks`
+  触发强化；使用独立 Session/UoW，任何异常被捕获并记
+  `retrieval_reinforcement_failed`，不影响检索响应。
+- 新增配置 `RETRIEVAL_HIT_FAMILIARITY_STEP=0.02`、
+  `RETRIEVAL_HIT_DEDUP_MINUTES=60`。
+- 反馈加分路径（0.08、每日 0.3、10 分钟去重、跨 1.0 触发 REPLAY）保持不变；
+  命中增量严格小于 1.0，不会触发 REPLAY。
+- 文档：`README.md` 第 3 章 3.2 / 3.6 重写；
+  `docs/API_CONTRACT.md` 3.3 / 3.4 补充检索副作用与计数边界。
+
+### 主要文件
+
+- `backend/app/models/telemetry.py`
+- `backend/app/models/__init__.py`
+- `backend/app/domain/scoring.py`
+- `backend/app/core/config.py`
+- `backend/app/services/retrieval_reinforcement.py`
+- `backend/app/api/v1/memory.py`
+- `backend/alembic/versions/3c9d2a7e5b11_retrieval_hit_gain.py`
+- `backend/tests/test_retrieval_reinforcement.py`
+- `backend/tests/test_domain_scoring.py`
+- `backend/tests/test_postgres_integration.py`
+- `backend/tests/test_models.py`
+- `backend/tests/test_migration.py`
+- `README.md`、`docs/API_CONTRACT.md`、`docs/CURRENT_WORK.md`
+
+### 验证结果
+
+- `ruff check backend`：All checks passed。
+- 单元测试 115 项通过。
+- `RUN_POSTGRES_INTEGRATION=1`：5 项集成测试通过，含新增的命中强化用例。
+- 新增用例覆盖：增量递减且不越过 1.0、同查询同条目当日不重复、
+  跨午夜 1 小时窗口、同查询次日可再加、换查询可再加、写失败被吞掉、
+  反馈专属字段不被命中路径修改。
+
+### 下一步
+
+- 已有部署数据库执行 `alembic upgrade head` 创建 `retrieval_hit_gain`；
+  如需调整力度，修改 `RETRIEVAL_HIT_FAMILIARITY_STEP`。
+
+
 
 
 

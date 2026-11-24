@@ -16,7 +16,7 @@ def config_for(monkeypatch: pytest.MonkeyPatch) -> Config:
     return Config(str(backend / "alembic.ini"))
 
 
-def test_initial_migration_renders_postgresql_upgrade_and_downgrade(
+def test_migrations_render_postgresql_upgrade_and_downgrade(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     config = config_for(monkeypatch)
@@ -26,9 +26,10 @@ def test_initial_migration_renders_postgresql_upgrade_and_downgrade(
     upgrade_sql = upgrade_output.getvalue()
 
     assert (
-        upgrade_sql.count("CREATE TABLE") - upgrade_sql.count("CREATE TABLE alembic_version") == 16
+        upgrade_sql.count("CREATE TABLE") - upgrade_sql.count("CREATE TABLE alembic_version") == 17
     )
     assert "CREATE EXTENSION IF NOT EXISTS vector" in upgrade_sql
+    assert "CREATE TABLE retrieval_hit_gain" in upgrade_sql
     assert "CREATE TYPE visibility" in upgrade_sql
     assert "TIMESTAMP WITH TIME ZONE" in upgrade_sql
     assert "VECTOR(256)" in upgrade_sql
@@ -36,8 +37,16 @@ def test_initial_migration_renders_postgresql_upgrade_and_downgrade(
     assert upgrade_sql.count("USING hnsw") == 2
     assert "source_event_key IS NOT NULL" in upgrade_sql
     assert "is_counted = true" in upgrade_sql
+    assert "uq_retrieval_hit_gain_retrieval_hit_daily_once" in upgrade_sql
     assert "CURRENT_TIMESTAMP" not in upgrade_sql
     assert "ALTER TABLE entity ADD CONSTRAINT fk_entity_last_event_id_event_memory" in upgrade_sql
+
+    hit_downgrade_output = io.StringIO()
+    with redirect_stdout(hit_downgrade_output):
+        command.downgrade(config, "3c9d2a7e5b11:74a69ff68f54", sql=True)
+    hit_downgrade_sql = hit_downgrade_output.getvalue()
+    assert "DROP INDEX ix_retrieval_hit_recent" in hit_downgrade_sql
+    assert "DROP TABLE retrieval_hit_gain" in hit_downgrade_sql
 
     downgrade_output = io.StringIO()
     with redirect_stdout(downgrade_output):

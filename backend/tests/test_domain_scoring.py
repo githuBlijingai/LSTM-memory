@@ -13,6 +13,7 @@ from app.domain.scoring import (
     event_memory_weight,
     materialize_familiarity,
     relevance,
+    retrieval_hit_delta,
     wiki_memory_weight,
 )
 
@@ -96,6 +97,27 @@ def test_familiarity_decays_after_protection_window() -> None:
     )
     assert result.score <= 1.0
     assert result.score < 1.0
+
+
+def test_retrieval_hit_delta_decreases_and_never_reaches_one() -> None:
+    assert retrieval_hit_delta(0.0, 0.02) == pytest.approx(0.02)
+    assert retrieval_hit_delta(0.5, 0.02) == pytest.approx(0.01)
+    assert retrieval_hit_delta(0.9, 0.02) == pytest.approx(0.002)
+    assert retrieval_hit_delta(1.0, 0.02) == 0.0
+    assert retrieval_hit_delta(1.5, 0.02) == 0.0
+
+    score = 0.0
+    for _ in range(1000):
+        score = min(1.0, score + retrieval_hit_delta(score, 0.02))
+    assert score <= 1.0
+    assert score < 1.0
+
+
+def test_retrieval_hit_delta_rejects_negative_inputs() -> None:
+    with pytest.raises(ValueError):
+        retrieval_hit_delta(-0.1, 0.02)
+    with pytest.raises(ValueError):
+        retrieval_hit_delta(0.1, -0.02)
 
 
 def test_memory_weights_and_delete_score() -> None:

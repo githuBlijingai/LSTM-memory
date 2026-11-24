@@ -29,6 +29,7 @@ from app.models import (
     FeedbackType,
     OutboxEvent,
     OutboxStatus,
+    RetrievalHitGain,
     Visibility,
     WorkingItem,
     WorkingSession,
@@ -51,6 +52,7 @@ from app.services.memory_reads import MemoryReadService
 from app.services.memory_search import MemorySearchService
 from app.services.memory_writes import EventCommandService
 from app.services.outbox import OutboxService
+from app.services.retrieval_reinforcement import RetrievalReinforcementService
 from app.services.uow import UnitOfWork
 
 pytestmark = pytest.mark.integration
@@ -628,4 +630,170 @@ def test_event_search_feedback_replay_rebuild_roundtrip(
             assert expired_row.summary == "过期会话摘要"
             assert check.get(WorkingSession, fresh_id).status == WorkingSessionStatus.CLOSED
             assert check.get(WorkingSession, active_id).status == WorkingSessionStatus.ACTIVE
+
+
+class _MutableClock:
+    def __init__(self, now: datetime) -> None:
+        self.now = now
+
+    def __call__(self) -> datetime:
+        return self.now
+
+    def advance(self, **kwargs: float) -> None:
+        self.now += timedelta(**kwargs)
+
+
+def _make_active_event(
+    session: Session,
+    entity: Entity,
+    *,
+    title: str,
+    familiarity: float,
+    created_at: datetime,
+) -> EventMemory:
+    event = EventMemory(
+        entity_id=entity.entity_id,
+        subject="Project Alpha",
+        event_type="decision",
+        event_time=created_at,
+        title=title,
+        raw_content=title,
+        embedding=[1.0] + [0.0] * 255,
+        source="api",
+        content_hash=hashlib.sha256(title.encode("utf-8")).hexdigest(),
+        status=EventStatus.ACTIVE,
+        visibility=Visibility.PRIVATE,
+        owner_id="alice",
+        created_at=created_at,
+        familiarity_score=familiarity,
+    )
+    session.add(event)
+    return event
+
+
+def test_retrieval_hit_reinforcement_dedup_next_day_and_cap(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """检索命中强化：增量递减、两层去重、次日可再计、不越过 1.0、不动反馈字段。"""
+    settings = Settings(
+        _env_file=None,
+        environment="test",
+        redis_url=None,
+        retrieval_hit_familiarity_step=0.02,
+        retrieval_hit_dedup_minutes=60,
+        new_memory_protect_hours=168,
+    )
+    with PostgresContainer("pgvector/pgvector:pg16") as postgres:
+        raw_url = postgres.get_connection_url()
+        database_url = "postgresql+psycopg://" + raw_url.split("://", 1)[1]
+        monkeypatch.setenv("DATABASE_URL", database_url)
+        engine = create_engine(database_url)
+        with engine.begin() as connection:
+            connection.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
+        command.upgrade(migration_config(database_url), "head")
+
+        factory = sessionmaker(bind=engine)
+        clock = _MutableClock(datetime(2026, 3, 1, 12, 0, tzinfo=UTC))
+        with Session(engine) as session:
+            entity = Entity(
+                entity_name="Project Alpha",
+                entity_type="project",
+                owner_id="alice",
+                visibility=Visibility.PRIVATE,
+            )
+            session.add(entity)
+            session.flush()
+            event_a = _make_active_event(
+                session, entity, title="A", familiarity=0.0, created_at=clock.now
+            )
+            event_b = _make_active_event(
+                session, entity, title="B", familiarity=0.0, created_at=clock.now
+            )
+            event_c = _make_active_event(
+                session, entity, title="C", familiarity=0.999, created_at=clock.now
+            )
+            event_d = _make_active_event(
+                session, entity, title="D", familiarity=1.0, created_at=clock.now
+            )
+            session.commit()
+            a_id = event_a.event_id
+            b_id = event_b.event_id
+            c_id = event_c.event_id
+            d_id = event_d.event_id
+
+        service = RetrievalReinforcementService(factory, settings, clock=clock)
+
+        # 首次命中 +0.02（0 + 0.02 × (1 - 0)）。
+        assert (
+            service.reinforce(
+                actor_id="alice", query="Project Alpha 阈值", hits=[("event", a_id)]
+            )
+            == 1
+        )
+        # 同查询同日重复：命中两层去重，不重复加分。
+        assert (
+            service.reinforce(
+                actor_id="alice", query="Project Alpha   阈值", hits=[("event", a_id)]
+            )
+            == 0
+        )
+        # 换查询措辞（同一查询归一化后不同）当日可再加，且增量递减 0.02 × (1 - 0.02)。
+        assert (
+            service.reinforce(
+                actor_id="alice", query="project alpha threshold", hits=[("event", a_id)]
+            )
+            == 1
+        )
+
+        # 跨午夜：同一指纹 1 小时内即使跨了自然日也不重复计。
+        clock.now = datetime(2026, 3, 1, 23, 30, tzinfo=UTC)
+        assert (
+            service.reinforce(actor_id="alice", query="跨午夜查询", hits=[("event", b_id)]) == 1
+        )
+        clock.advance(minutes=40)
+        assert (
+            service.reinforce(actor_id="alice", query="跨午夜查询", hits=[("event", b_id)]) == 0
+        )
+        clock.advance(minutes=30)
+        assert (
+            service.reinforce(actor_id="alice", query="跨午夜查询", hits=[("event", b_id)]) == 1
+        )
+
+        # 同一查询次日可再贡献一次。
+        clock.now = datetime(2026, 3, 2, 12, 0, tzinfo=UTC)
+        assert (
+            service.reinforce(
+                actor_id="alice", query="Project Alpha 阈值", hits=[("event", a_id)]
+            )
+            == 1
+        )
+
+        # 熟悉度逼近 1.0 但不会超过；已到 1.0 则不再加分也不写审计行。
+        clock.now = datetime(2026, 3, 3, 12, 0, tzinfo=UTC)
+        assert service.reinforce(actor_id="alice", query="cap query", hits=[("event", c_id)]) == 1
+        assert service.reinforce(actor_id="alice", query="cap query", hits=[("event", d_id)]) == 0
+
+        with Session(engine) as check:
+            stored_a = check.get(EventMemory, a_id)
+            stored_b = check.get(EventMemory, b_id)
+            stored_c = check.get(EventMemory, c_id)
+            stored_d = check.get(EventMemory, d_id)
+            assert stored_a is not None and stored_b is not None
+            assert stored_c is not None and stored_d is not None
+            assert stored_a.familiarity_score == pytest.approx(0.058808)
+            assert stored_b.familiarity_score == pytest.approx(0.0396)
+            assert stored_c.familiarity_score == pytest.approx(0.99902)
+            assert stored_d.familiarity_score == 1.0
+            # 命中强化不推进反馈专属字段。
+            assert stored_a.access_count == 0
+            assert stored_a.last_access_time is None
+            assert (
+                check.scalar(
+                    select(func.count())
+                    .select_from(RetrievalHitGain)
+                    .where(RetrievalHitGain.actor_id == "alice")
+                )
+                == 6
+            )
+
 

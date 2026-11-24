@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import Literal
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, Query, Request
+from fastapi import APIRouter, BackgroundTasks, Depends, Query, Request
 
 from app.api.dependencies import (
     get_model_bundle,
@@ -37,6 +37,7 @@ from app.services.feedback import FeedbackService
 from app.services.memory_reads import MemoryReadService
 from app.services.memory_search import MemorySearchService
 from app.services.memory_writes import EventCommandService
+from app.services.retrieval_reinforcement import reinforce_retrieval_hits
 from app.services.uow import UnitOfWork
 from app.tasks.dispatch import dispatch_state_replay
 
@@ -220,6 +221,7 @@ def restore_event(
 @router.post("/search", dependencies=[Depends(_search_rate_limit)])
 def search_memory(
     payload: SearchRequest,
+    background_tasks: BackgroundTasks,
     uow: UnitOfWork = Depends(get_uow),
     settings: Settings = Depends(get_settings_dependency),
     models: ModelBundle = Depends(get_model_bundle),
@@ -227,6 +229,16 @@ def search_memory(
 ) -> dict:
     outcome = MemorySearchService(uow.session, settings, models).search(user=user, request=payload)
     uow.commit()
+    # 命中强化是检索事务之外的旁路写入：放在响应返回后执行，失败只记日志。
+    hits = [(result.memory_type, result.memory_id) for result in outcome.results]
+    if hits:
+        background_tasks.add_task(
+            reinforce_retrieval_hits,
+            settings=settings,
+            actor_id=user.subject,
+            query=payload.query,
+            hits=hits,
+        )
     response = SearchResponse(
         query_id=outcome.query_id,
         intent=outcome.intent,

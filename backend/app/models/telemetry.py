@@ -105,3 +105,35 @@ class FamiliarityDailyGain(Base):
     __table_args__ = (
         CheckConstraint("gained_score >= 0 AND gained_score <= 0.3", name="daily_gain_range"),
     )
+
+
+class RetrievalHitGain(Base):
+    """检索命中强化的审计与去重记录。
+
+    每个 (actor_id, query_hash, memory_type, memory_id, gain_date) 至多一行，
+    唯一约束同时承担「同一查询指纹每天最多贡献一次」的计数语义。
+    """
+
+    __tablename__ = "retrieval_hit_gain"
+
+    gain_id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
+    actor_id: Mapped[str] = mapped_column(String(128))
+    query_hash: Mapped[str] = mapped_column(CHAR(64))
+    memory_type: Mapped[MemoryType] = mapped_column(pg_enum(MemoryType, "memory_type"))
+    memory_id: Mapped[UUID]
+    gain_date: Mapped[date] = mapped_column(Date)
+    gained_score: Mapped[float] = mapped_column(Float, default=0.0)
+    hit_at: Mapped[datetime]
+
+    __table_args__ = (
+        UniqueConstraint(
+            "actor_id",
+            "query_hash",
+            "memory_type",
+            "memory_id",
+            "gain_date",
+            name="retrieval_hit_daily_once",
+        ),
+        Index("ix_retrieval_hit_recent", "actor_id", "memory_type", "memory_id", "hit_at"),
+        CheckConstraint("gained_score >= 0", name="retrieval_hit_gain_nonnegative"),
+    )

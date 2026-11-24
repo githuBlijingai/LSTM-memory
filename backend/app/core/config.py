@@ -97,6 +97,11 @@ class Settings(BaseSettings):
     archive_retention_days: int = Field(default=30, ge=0)
     feedback_dedup_minutes: int = Field(default=10, ge=0)
 
+    # 检索命中强化（闭环：被检索到也算一次温和的熟悉度提升）。
+    # 增量 = step × (1 - 当前熟悉度)，必须小于反馈步长，保证只逼近 1.0 而不越过。
+    retrieval_hit_familiarity_step: float = Field(default=0.02, gt=0, le=0.08)
+    retrieval_hit_dedup_minutes: int = Field(default=60, ge=1, le=1440)
+
     # 工作记忆与维护任务参数。
     working_memory_token_budget: int = Field(default=8000, ge=1)
     working_memory_reserved_tokens: int = Field(default=2000, ge=0)

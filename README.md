@@ -18,7 +18,7 @@
 |---|---|---|
 | 事件怎么变成向量、怎么进 LSTM | API 只落 `pending` + Outbox；worker 取实体最近事件窗口，1024 维基础向量经 `Linear(1024→256)` 进单层 LSTM，最后有效步 hidden 归一化后写入 `event_memory.embedding`（`vector(256)`）；`(h,c)` 存 `entity_state_snapshot` | 第 1 章 |
 | 检索怎么召回 | 查询文本编码成 256 维后，事件与 Wiki 各自用 pgvector 余弦距离召回（阈值 0.15、候选 100），可选精排；最终分 = 意图权重 × 相关性 × 记忆权重。**没有"自定义维度"参数，也没有词法召回通道** | 第 2 章 |
-| 想起越多越不容易遗忘？ | **只部分成立**：用户标记"有用"会加熟悉度并可能触发状态重放；**被检索命中不会加熟悉度**，只写一条曝光日志 | 第 3 章 |
+| 想起越多越不容易遗忘？ | **已闭环**：用户标记"有用"会加熟悉度并可能触发状态重放；被检索命中也会按 `0.02 × (1 - F)` 温和加分，但不会触发重放 | 第 3 章 |
 
 ---
 
@@ -183,7 +183,7 @@ relevance = 0.4 * cos_norm + 0.6 * rerank_score       # 启用精排
 - `F` 是"物化熟悉度"：先按 `F * exp(-FAMILIARITY_GAMMA * elapsed_days)` 衰减（`γ=0.003`），48 小时保护期内不衰减；锚点是 `familiarity_updated_at`，为空则用 `created_at`。
 - 事件衰减基于 `initial_decay_score`（写入默认 1.0），不是基于 `decay_score` 字段，所以重复计算不会叠加衰减。
 
-见 [scoring.py](file:///d:/记忆库/memory-system/backend/app/domain/scoring.py#L39-L116)。
+见 [scoring.py](file:///d:/记忆库/memory-system/backend/app/domain/scoring.py#L39-L128)。
 
 ### 2.5 融合、排序、阈值与 top-k
 
@@ -195,7 +195,7 @@ final_score = clamp(intent_weight) * clamp(relevance) * clamp(memory_weight)
 - 排序键：`(-final_score, memory_type, memory_id, tie_break)`，稳定排序。
 - `top_n` 取请求里的 `top_n`（默认 10，上限 50）；配置项 `SEARCH_TOP_N` 在当前检索路径中未被使用。
 - 同一篇 Wiki 文章最多保留 2 个分块（`MAX_WIKI_CHUNKS_PER_ARTICLE=2`），超出部分跳过而不是挤掉其他结果。
-- 每次检索都会写一条 `memory_query` 和若干 `memory_access_log`（`feedback_type=exposure`、`is_counted=false`）。见 [memory_search.py](file:///d:/记忆库/memory-system/backend/app/services/memory_search.py#L106-L159)、[retrieval.py](file:///d:/记忆库/memory-system/backend/app/domain/retrieval.py#L27-L54)。
+- 每次检索都会写一条 `memory_query` 和若干 `memory_access_log`（`feedback_type=exposure`、`is_counted=false`）；响应返回后还会异步触发命中强化（见第 3 章）。见 [memory_search.py](file:///d:/记忆库/memory-system/backend/app/services/memory_search.py#L106-L159)、[retrieval.py](file:///d:/记忆库/memory-system/backend/app/domain/retrieval.py#L27-L54)。
 
 参数与阈值集中位置：
 
@@ -260,7 +260,7 @@ final_score = clamp(intent_weight) * clamp(relevance) * clamp(memory_weight)
 | 检索编排与曝光日志 | [memory_search.py](file:///d:/记忆库/memory-system/backend/app/services/memory_search.py#L86-L159) |
 | 两路召回 | [memory_search.py](file:///d:/记忆库/memory-system/backend/app/services/memory_search.py#L170-L355) |
 | 意图分类 | [intent.py](file:///d:/记忆库/memory-system/backend/app/domain/intent.py#L54-L123) |
-| 相关性/衰减/权重 | [scoring.py](file:///d:/记忆库/memory-system/backend/app/domain/scoring.py#L20-L116) |
+| 相关性/衰减/权重 | [scoring.py](file:///d:/记忆库/memory-system/backend/app/domain/scoring.py#L20-L128) |
 | 融合与条数限制 | [retrieval.py](file:///d:/记忆库/memory-system/backend/app/domain/retrieval.py#L27-L54) |
 | 请求参数 | [schemas/memory.py](file:///d:/记忆库/memory-system/backend/app/schemas/memory.py#L106-L129) |
 
@@ -268,11 +268,11 @@ final_score = clamp(intent_weight) * clamp(relevance) * clamp(memory_weight)
 
 ## 3. 「想起越多越不容易遗忘」
 
-**结论**：这条闭环**只实现了一半**。
+**结论**：这条闭环现在是完整的，但两条路径的力度不同。
 
-- **"被用户标记有用"确实会提高熟悉度**：`adopted` / `helpful` 反馈会先物化衰减，再加 `FAMILIARITY_STEP=0.08`，受每日上限和去重约束；熟悉度跨过 1.0 时还会创建一个重放任务，用权威快照重新推进实体状态。
-- **"被检索到"不会提高熟悉度**：检索只写 `memory_access_log(feedback_type=exposure, is_counted=false)`，维护任务不消费这张表，`access_count` 也只在计分反馈时才加一。
-- 熟悉度不是实体的属性，而是**每条事件、每个 Wiki 分块各自的字段**；实体表没有 `familiarity_score`。
+- **"被检索到"会温和地提高熟悉度**：`POST /memory/search` 返回结果后，后台任务按 `增量 = 0.02 × (1 - 当前熟悉度)` 给命中的每条记忆加分；增量随熟悉度递减，只逼近 1.0、不会越过，也不会触发重放。
+- **"被用户标记有用"仍是最强入口**：`adopted` / `helpful` 反馈每次 +0.08，受每日 0.3 上限和 10 分钟去重约束；只有这条路径能让熟悉度跨过 1.0 并触发 REPLAY。
+- 熟悉度不是实体的属性，而是**每条事件、每个 Wiki 分块各自的字段**；实体表没有 `familiarity_score`。命中强化的去重与审计记录另存在 `retrieval_hit_gain`。
 
 ### 3.1 熟悉度存在哪
 
@@ -281,24 +281,66 @@ final_score = clamp(intent_weight) * clamp(relevance) * clamp(memory_weight)
 | `event_memory` | `familiarity_score`（默认 0，约束 0–2）、`familiarity_updated_at`、`last_access_time`、`access_count`、`replay_count`（0–2） |
 | `wiki_chunk` | `familiarity_score`、`familiarity_updated_at`、`last_access_time`、`access_count` |
 | `entity` | **没有**熟悉度字段；只有状态版本、摘要、最后事件时间 |
+| `retrieval_hit_gain` | 命中强化的去重与审计行：`query_hash`、`memory_id`、`gain_date`、`gained_score`、`hit_at`，不存熟悉度本身 |
 
-见 [models/memory.py](file:///d:/记忆库/memory-system/backend/app/models/memory.py#L59-L129)、[models/wiki.py](file:///d:/记忆库/memory-system/backend/app/models/wiki.py#L52-L91)。
+见 [models/memory.py](file:///d:/记忆库/memory-system/backend/app/models/memory.py#L59-L129)、[models/wiki.py](file:///d:/记忆库/memory-system/backend/app/models/wiki.py#L52-L91)、[telemetry.py](file:///d:/记忆库/memory-system/backend/app/models/telemetry.py#L110-L138)。
 
-### 3.2 检索命中：只记曝光，不加分
+### 3.2 检索命中：温和加分，独立事务
 
-`MemorySearchService.search` 对每条入选结果写一条 `MemoryAccessLog`：
+`MemorySearchService.search` 在返回前仍然只写一条 `MemoryAccessLog`（`feedback_type="exposure"`、`is_counted=false`）。真正的熟悉度强化发生在响应发出之后，由 FastAPI `BackgroundTasks` 调用独立服务完成，链路如下：
+
+1. 路由完成检索与 `uow.commit()`，组装 `SearchResponse`。见 [memory.py](file:///d:/记忆库/memory-system/backend/app/api/v1/memory.py#L221-L247)。
+2. 把本次返回的每条结果 `(memory_type, memory_id)` 作为 `hits` 交给 `reinforce_retrieval_hits`。只强化**用户实际拿到的 top_n 结果**，不是召回候选全量。
+3. 后台任务用 `get_session_factory(settings.database_url)` 新开 `UnitOfWork`，与检索请求的 Session 完全隔离，不进入检索事务。
+4. 对每个命中先 `SELECT ... FOR UPDATE` 锁定记忆行，物化当前熟悉度（含 48 小时保护期与日衰减），再算 `delta = RETRIEVAL_HIT_FAMILIARITY_STEP × max(0, 1 - F)`。
+5. 两层去重通过后写一行 `retrieval_hit_gain`，再更新 `familiarity_score = min(1.0, F + delta)` 与 `familiarity_updated_at`。**不碰** `access_count` 和 `last_access_time`，这两个字段仍只由计分反馈维护。见 [retrieval_reinforcement.py](file:///d:/记忆库/memory-system/backend/app/services/retrieval_reinforcement.py#L55-L138)、[scoring.py](file:///d:/记忆库/memory-system/backend/app/domain/scoring.py#L91-L100)。
+6. 后台写入抛出的任何异常都由 [reinforce_retrieval_hits](file:///d:/记忆库/memory-system/backend/app/services/retrieval_reinforcement.py#L147-L169) 捕获并记 `retrieval_reinforcement_failed` 警告，返回值 0；检索响应已经发出，不受影响。
+
+公式与边界：
 
 ```text
-feedback_type = "exposure"
-is_counted = False
-result_rank = 名次
-similarity = 余弦相似度
-final_score = 最终分
+delta = step × (1 - F_current)
+F_next = min(1.0, F_current + delta)
 ```
 
-之后没有任何代码把 `exposure` 汇总成熟悉度增量：`maintenance.py` 只处理 `event_memory` 和 `wiki_chunk` 自身的字段，不读 `memory_access_log`；`access_count` 也只在反馈计分路径里 `+= 1`。所以"反复被搜到"目前完全不影响衰减、归档或排序。见 [memory_search.py](file:///d:/记忆库/memory-system/backend/app/services/memory_search.py#L137-L153)、[maintenance.py](file:///d:/记忆库/memory-system/backend/app/tasks/maintenance.py#L35-L134)。
+- 当 `step = 0.02` 时，`F=0` 首次 +0.02，`F=0.5` 时 +0.01，`F=0.9` 时 +0.002，`F=1.0` 时 +0。
+- 因为 `step < 1`，`F + delta = step + F × (1 - step) < 1`，命中强化**永远不会自己越过 1.0**，也就不会触发 REPLAY。
+- `F_current` 是物化后的值：先按 `FAMILIARITY_GAMMA` 扣掉衰减，再加增量，避免漏算历史衰减。
 
-### 3.3 用户反馈：唯一的加分入口
+两层去重：
+
+| 层 | 键 | 作用 | 边界 |
+|---|---|---|---|
+| 时间窗 | `(actor_id, query_hash, memory_type, memory_id)` + `RETRIEVAL_HIT_DEDUP_MINUTES=60` | 同一查询指纹对同一记忆 1 小时内只计一次，跨午夜也拦住 | 不同用户不共享 |
+| 自然日唯一约束 | `(actor_id, query_hash, memory_type, memory_id, gain_date)` | 同一查询指纹每天最多贡献一次；换措辞得到新指纹，当天可再计 | 次日自动放行 |
+
+查询指纹见 [normalize_query_fingerprint](file:///d:/记忆库/memory-system/backend/app/services/retrieval_reinforcement.py#L29-L32)：去掉首尾空白、转小写、压缩连续空白后取 SHA-256。因此 `Project  Alpha` 与 `project alpha` 是同一查询，`project alpha threshold` 则是另一条。
+
+参数：
+
+| 参数 | 默认 | 含义 |
+|---|---|---|
+| `RETRIEVAL_HIT_FAMILIARITY_STEP` | 0.02 | 命中强化的基础增量，约束 ≤ `FAMILIARITY_STEP` |
+| `RETRIEVAL_HIT_DEDUP_MINUTES` | 60 | 同指纹同记忆的计分窗口 |
+| `FAMILIARITY_GAMMA` | 0.003 | 计算 `F_current` 时的日衰减 |
+| `NEW_MEMORY_PROTECT_HOURS` | 48 | 保护期内不衰减，命中仍可加分 |
+| `FAMILIARITY_STEP` | 0.08 | 有效反馈的单次增量（对照） |
+| `FAMILIARITY_DAILY_CAP` | 0.3 | 反馈专用的每日上限，命中不占用 |
+| `REPLAY_THRESHOLD` | 1.0 | 只有反馈能跨过的重放阈值 |
+
+默认值见 [config.py](file:///d:/记忆库/memory-system/backend/app/core/config.py#L100-L103)。
+
+**为什么不上每日上限**：命中增量本身随熟悉度线性收缩，越接近 1.0 越接近 0；同一天里同一查询最多贡献一次，换查询虽可叠加，但每次都被 `1 - F` 压小，收敛速度自然放慢，不需要再叠一层硬上限。反过来，若加每日上限，"被反复想起"在熟悉度较高时会完全失效，与闭环目标冲突。反馈原有的 0.3 上限保持不变。
+
+**对排序的影响**：下一次检索读取更新后的 `familiarity_score`，经 `event_memory_weight = min(D × (1 + βF), MEMORY_WEIGHT_CAP)` / `wiki_memory_weight` 放大记忆权重，从而提高最终分和名次；同时 `delete_score = D × (1 + 0.3F)` 变大，自动归档更难触发。影响是渐进的，单次命中只 +0.02。
+
+**对 REPLAY 的影响**：无。命中增量严格小于 `1 - F`，不会跨过 `REPLAY_THRESHOLD`；重放仍只由反馈触发，既有逻辑未改。
+
+审计与幂等：`retrieval_hit_gain` 每行记录 `actor_id`、`query_hash`、`memory_type`、`memory_id`、`gain_date`、`gained_score`、`hit_at`，自然日唯一约束同时承担计数语义；插入使用 `ON CONFLICT DO NOTHING`，并发或同一请求重放都不会重复加分。见 [telemetry.py](file:///d:/记忆库/memory-system/backend/app/models/telemetry.py#L110-L138)、[迁移](file:///d:/记忆库/memory-system/backend/alembic/versions/3c9d2a7e5b11_retrieval_hit_gain.py#L25-L57)。
+
+### 3.3 用户反馈：显式加分入口
+
+命中强化是隐式、温和的；反馈仍是唯一能跨过 1.0、触发重放的入口。
 
 `POST /api/v1/memory/feedback` 必须引用一次检索返回的 `query_id` 和结果 `memory_id`。处理规则：
 
@@ -331,7 +373,7 @@ final_score = 最终分
 
 同一轮维护里，`event_memory` 与 `wiki_chunk` 各最多处理 `MAINTENANCE_BATCH_SIZE=500` 行（按 `created_at` 排序）。数据量超过 500 时，单轮只会覆盖最旧的一批，需要多轮或调大该值。
 
-见 [maintenance.py](file:///d:/记忆库/memory-system/backend/app/tasks/maintenance.py#L79-L214)、[lifecycle.py](file:///d:/记忆库/memory-system/backend/app/domain/lifecycle.py#L20-L53)、[scoring.py](file:///d:/记忆库/memory-system/backend/app/domain/scoring.py#L119-L123)、[worker.py](file:///d:/记忆库/memory-system/backend/app/worker.py#L36-L42)。
+见 [maintenance.py](file:///d:/记忆库/memory-system/backend/app/tasks/maintenance.py#L79-L214)、[lifecycle.py](file:///d:/记忆库/memory-system/backend/app/domain/lifecycle.py#L20-L53)、[scoring.py](file:///d:/记忆库/memory-system/backend/app/domain/scoring.py#L131-L135)、[worker.py](file:///d:/记忆库/memory-system/backend/app/worker.py#L36-L42)。
 
 人工遗忘也走同一套状态：
 
@@ -346,33 +388,42 @@ final_score = 最终分
 
 ### 3.5 重放做了什么、没做什么
 
-熟悉度从 `<1.0` 跨到 `>=1.0`，且 `replay_count < REPLAY_MAX_COUNT`（默认 2）时，反馈服务创建 `REPLAY` 任务：
+熟悉度从 `<1.0` 跨到 `>=1.0`，且 `replay_count < REPLAY_MAX_COUNT`（默认 2）时，反馈服务创建 `REPLAY` 任务。检索命中不会走到这里，因为它的增量上限保证 `F` 严格小于 1.0。
 
 - **做**：读取实体权威快照作为 `init_state`，只把该条事件编码一步（`mask=[1.0]`），推进 `state_version`，写一条 `snapshot_kind=REPLAY` 的新快照并更新实体版本。
 - **没做**：不修改 `event_memory.embedding`，也不再加熟悉度；重放记录写在 `state_replay_log`。
 
 见 [feedback.py](file:///d:/记忆库/memory-system/backend/app/services/feedback.py#L237-L256)、[tasks/replay.py](file:///d:/记忆库/memory-system/backend/app/tasks/replay.py#L32-L113)、[entity_state.py](file:///d:/记忆库/memory-system/backend/app/services/entity_state.py#L297-L375)。
 
-### 3.6 缺口在哪一环
+### 3.6 闭环补齐后的边界
 
-"被检索到 → 强化"这一环不存在，缺口位置很具体：
+原来的缺口（检索命中不改变熟悉度）已经由三处代码补齐：
 
-1. [MemorySearchService.search](file:///d:/记忆库/memory-system/backend/app/services/memory_search.py#L137-L153) 只写 `is_counted=false` 的曝光日志，没有调用任何熟悉度更新。
-2. [run_maintenance](file:///d:/记忆库/memory-system/backend/app/tasks/maintenance.py#L35-L52) 只重算两条记忆表自身的 `decay_score/familiarity_score`，不聚合 `memory_access_log`。
-3. 没有任何 Celery 任务或 SQL 把"曝光次数/排名"换算成熟悉度增量。
+1. [search_memory](file:///d:/记忆库/memory-system/backend/app/api/v1/memory.py#L221-L247) 在 `uow.commit()` 之后把 top_n 结果交给后台任务，不进入检索事务。
+2. [RetrievalReinforcementService.reinforce](file:///d:/记忆库/memory-system/backend/app/services/retrieval_reinforcement.py#L55-L138) 负责物化、递减增量、两层去重、写审计行并更新熟悉度。
+3. [retrieval_hit_gain](file:///d:/记忆库/memory-system/backend/app/models/telemetry.py#L110-L138) 提供按天唯一的审计/计数记录；原 `memory_access_log` 的 `is_counted=false` 曝光行保持原样。
 
-因此当前语义是：**用户显式说"这条有用"才会被记住得更牢；系统自己反复搜到它并不会。** 想让"想起越多越不易遗忘"成立，需要新增一条从曝光日志到熟悉度的聚合路径（例如在维护任务里按 `memory_id` 统计曝光并加分），目前代码里没有。
+仍然要注意的边界：
+
+- **尽力而为，不是持久队列**：强化在响应返回后执行，进程崩溃或任务抛错时只记警告、不补做；需要强一致时不能依赖它。
+- **只强化返回结果**：`top_n` 之外的高分候选不加分；同一请求重放不会重复加分（两层去重）。
+- **不推进访问计数**：`access_count` / `last_access_time` 仍只由有效反馈维护，概览与"最近访问"语义不变。
+- **Wiki 同样适用**：Wiki 分块的命中强化与事件共用同一公式和去重表；Wiki 没有 REPLAY。
+- **无每日上限是刻意的**：见 3.2 的收敛性说明；若要更保守，可下调 `RETRIEVAL_HIT_FAMILIARITY_STEP`。
 
 ### 3.7 本章关键文件
 
 | 作用 | 文件 |
 |---|---|
+| 检索路由与命中强化触发 | [memory.py](file:///d:/记忆库/memory-system/backend/app/api/v1/memory.py#L221-L247) |
+| 检索命中强化、指纹与去重 | [retrieval_reinforcement.py](file:///d:/记忆库/memory-system/backend/app/services/retrieval_reinforcement.py#L29-L169) |
 | 反馈计分与重放触发 | [feedback.py](file:///d:/记忆库/memory-system/backend/app/services/feedback.py#L54-L327) |
-| 熟悉度物化与衰减公式 | [scoring.py](file:///d:/记忆库/memory-system/backend/app/domain/scoring.py#L60-L88) |
+| 熟悉度物化、命中增量与衰减公式 | [scoring.py](file:///d:/记忆库/memory-system/backend/app/domain/scoring.py#L60-L100) |
 | 归档判定与清除时间 | [lifecycle.py](file:///d:/记忆库/memory-system/backend/app/domain/lifecycle.py#L20-L53) |
 | 每日维护 | [maintenance.py](file:///d:/记忆库/memory-system/backend/app/tasks/maintenance.py#L79-L236) |
 | 熟悉度相关字段 | [models/memory.py](file:///d:/记忆库/memory-system/backend/app/models/memory.py#L80-L84)、[models/wiki.py](file:///d:/记忆库/memory-system/backend/app/models/wiki.py#L67-L71) |
-| 参数默认值 | [config.py](file:///d:/记忆库/memory-system/backend/app/core/config.py#L88-L98) |
+| 命中强化审计/去重表 | [telemetry.py](file:///d:/记忆库/memory-system/backend/app/models/telemetry.py#L110-L138) |
+| 参数默认值 | [config.py](file:///d:/记忆库/memory-system/backend/app/core/config.py#L88-L103) |
 
 ---
 
@@ -594,6 +645,8 @@ npm run dev -- --port 3100
 | `ARCHIVE_RETENTION_DAYS` | 30 | 归档后保留天数 |
 | `REPLAY_THRESHOLD` / `REPLAY_MAX_COUNT` | 1.0 / 2 | 触发状态重放的熟悉度阈值与次数上限 |
 | `FEEDBACK_DEDUP_MINUTES` | 10 | 同一查询重复反馈的去重窗口 |
+| `RETRIEVAL_HIT_FAMILIARITY_STEP` | 0.02 | 检索命中强化的基础增量 |
+| `RETRIEVAL_HIT_DEDUP_MINUTES` | 60 | 同查询同记忆的命中计分窗口 |
 | `SEARCH_CANDIDATE_K` | 100 | 每路召回候选数 |
 | `SEARCH_MIN_SIMILARITY` | 0.15 | 召回余弦下限 |
 | `MEMORY_WEIGHT_CAP` | 2.5 | 记忆权重上限 |
@@ -714,11 +767,11 @@ Pop-Location
 ## 10. 已知限制
 
 - **事件模型只能是本地包**：`EVENT_MODEL_URI` 写远程 URL 只能绕过预检，运行期仍按本地目录加载。
-- **生产禁止本地 CPU 模型**：`ENVIRONMENT=production` 时若 `ALLOW_CPU_MODELS=true` 且 `MODEL_DEVICE=cpu`，配置校验会直接拒绝；本地 CPU 仅用于开发/测试。见 [config.py](file:///d:/记忆库/memory-system/backend/app/core/config.py#L161-L168)。
+- **生产禁止本地 CPU 模型**：`ENVIRONMENT=production` 时若 `ALLOW_CPU_MODELS=true` 且 `MODEL_DEVICE=cpu`，配置校验会直接拒绝；本地 CPU 仅用于开发/测试。见 [config.py](file:///d:/记忆库/memory-system/backend/app/core/config.py#L166-L173)。
 - **向量维度由表结构固定**：`event_memory.embedding` 是 `vector(256)`、`wiki_chunk.embedding` 是 `vector(1024)`；`BASE_EMBEDDING_DIM` 虽可配置，换维度要改列、迁移向量数据并重训事件模型。
 - **换 Embedding 供应商不会自动重建旧向量**：检索不按模型版本过滤，混用不同模型的向量结果不可信；Wiki 可用 `mode=reembed`，事件没有批量重编码接口（只能靠实体重建或逐条重放）。
 - **检索没有词法通道**：纯向量召回，专有名词/精确编号的召回依赖基础模型质量。
-- **检索命中不强化熟悉度**：曝光只写日志，不计分，详见第 3 章。
+- **命中强化是尽力而为的旁路写入**：在响应返回后异步执行，进程崩溃或写失败不重试；单次增量 0.02 且随熟悉度递减，不会触发 REPLAY。详见第 3 章。
 - **维护任务是批量上限**：每轮每表最多 500 行，数据量大时需要多轮执行。
 - **迟到事件可能被挤出窗口**：实体已有 16 条更新事件时，当前迟到事件不参与本次编码，由随后的重建任务纠正。
 - Wiki 同步**不支持 `s3://`**：数据包解析会明确报错，需先落地本地或 HTTP(S)。见 [wiki_parser.py](file:///d:/记忆库/memory-system/backend/app/services/wiki_parser.py#L145-L150)。

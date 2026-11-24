@@ -88,6 +88,18 @@ def materialize_familiarity(
     return FamiliarityDecay(min(max_score, max(0.0, decayed)), now)
 
 
+def retrieval_hit_delta(familiarity_score: float, step: float) -> float:
+    """检索命中增量 = step × (1 - F)。
+
+    随熟悉度递减，且当 step < 1 时 F + delta 恒小于 1，命中强化不会自己越过 1.0。
+    """
+    if familiarity_score < 0:
+        raise ValueError("familiarity_score must be non-negative")
+    if step < 0:
+        raise ValueError("step must be non-negative")
+    return step * max(0.0, 1.0 - familiarity_score)
+
+
 def event_memory_weight(
     decay_score: float,
     familiarity_score: float,

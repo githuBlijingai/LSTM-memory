@@ -27,6 +27,7 @@ EXPECTED_TABLES = {
     "memory_query",
     "memory_access_log",
     "familiarity_daily_gain",
+    "retrieval_hit_gain",
     "outbox_event",
     "background_job",
     "idempotency_record",
@@ -34,7 +35,7 @@ EXPECTED_TABLES = {
 }
 
 
-def test_all_sixteen_tables_are_registered() -> None:
+def test_all_tables_are_registered() -> None:
     assert set(Base.metadata.tables) == EXPECTED_TABLES
 
 

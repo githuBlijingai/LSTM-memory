@@ -205,6 +205,7 @@
 - `score_breakdown` 的事件键：`cosine_similarity`、`rerank_score`（启用精排时才有）、`relevance`、`decay_score`、`familiarity_score`、`memory_weight`、`intent_weight`；Wiki 键：`cosine_similarity`、`rerank_score`（可选）、`importance`、`familiarity_score`、`intent_weight`。数值保留 6 位小数。
 - `include_score_breakdown=false` 时 `score_breakdown` 为 null。
 - **当前 `feedback_state` 恒为 null**，前端不要依赖该字段展示状态。
+- **检索副作用（异步、尽力而为）**：响应返回后，服务会对本次返回的每条结果执行命中强化：`delta = RETRIEVAL_HIT_FAMILIARITY_STEP × max(0, 1 - 当前熟悉度)`，并写回 `familiarity_score = min(1.0, ...)`。两层去重：同一查询指纹 + 同一记忆在 `RETRIEVAL_HIT_DEDUP_MINUTES=60` 内只计一次；同一指纹对同一记忆每天最多一次（`retrieval_hit_gain` 唯一约束）。写入失败只记日志，不影响本次响应；不改变 `access_count` / `last_access_time`，也不会令 `replay_job_created=true`。
 
 ### 3.4 反馈
 
@@ -215,6 +216,8 @@
 响应 `data`：`{"accepted": bool, "counted": bool, "not_counted_reason": string|null, "familiarity_score": float, "replay_job_created": bool}`。
 
 `not_counted_reason` ∈ `duplicate_feedback`、`recent_duplicate_query`、`daily_cap_reached`、`not_consolidating_feedback`。
+
+命中强化使用独立的 `retrieval_hit_gain` 计数，不占用本节反馈的 `FAMILIARITY_DAILY_CAP`；反馈仍是唯一能跨过 `REPLAY_THRESHOLD` 并返回 `replay_job_created=true` 的路径。
 
 ### 3.5 工作记忆
 

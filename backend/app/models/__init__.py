@@ -18,7 +18,12 @@ from app.models.enums import (
 from app.models.infrastructure import AuditLog, BackgroundJob, IdempotencyRecord, OutboxEvent
 from app.models.memory import Entity, EventMemory
 from app.models.state import EntityStateSnapshot, StateReplayLog
-from app.models.telemetry import FamiliarityDailyGain, MemoryAccessLog, MemoryQuery
+from app.models.telemetry import (
+    FamiliarityDailyGain,
+    MemoryAccessLog,
+    MemoryQuery,
+    RetrievalHitGain,
+)
 from app.models.wiki import WikiArticle, WikiChunk, WikiSyncTask
 from app.models.working import WorkingItem, WorkingSession
 
@@ -42,6 +47,7 @@ __all__ = [
     "OutboxEvent",
     "OutboxStatus",
     "ReplayStatus",
+    "RetrievalHitGain",
     "SnapshotKind",
     "StateReplayLog",
     "Visibility",
